@@ -19,12 +19,15 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
+    private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
+    public UserService(UserRepository userRepository, ModelMapper modelMapper) {
+        this.userRepository = userRepository;
+        this.modelMapper = modelMapper;
+    }
 
-    @Autowired
-    private UserRepository userRepository;
 
-    @Autowired
-    private ModelMapper modelMapper;
+
 
 
     public User createUser(UserDto data) {
