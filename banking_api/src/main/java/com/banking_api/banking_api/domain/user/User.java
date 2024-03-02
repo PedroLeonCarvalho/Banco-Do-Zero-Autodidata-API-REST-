@@ -1,10 +1,8 @@
 package com.banking_api.banking_api.domain.user;
 
+import com.banking_api.banking_api.dtos.UserDto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
@@ -13,7 +11,8 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
+@EqualsAndHashCode
+@ToString
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,5 +30,18 @@ public class User {
     @Column(unique = true)
     private String username;
     private String password;
+
+    public User(UserDto user) {
+        this.id = user.id();
+        this.name = user.name();
+        this.email = user.email();
+        this.cpf = user.cpf();
+        this.birthDate = user.birthDate();
+        this.age = user.age();
+        this.active=true;
+        this.city = user.city();
+        this.username = user.username();
+        this.password = user.password();
+    }
 }
 
