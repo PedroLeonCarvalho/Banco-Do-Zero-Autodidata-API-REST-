@@ -36,7 +36,7 @@ public class UserService {
         return newUser;
     }
 
-    public User updateUser(UserDto data) {
+    public UserDto updateUser(UserDto data) {
 
         User user = userRepository.getReferenceById(data.id());
 
@@ -73,10 +73,11 @@ public class UserService {
         }
 
         userRepository.save(user);
-        ;
 
-        return user;
+      return convertToDto(user);
+
     }
+
 
     public UserDto convertToDto(User user) {
         return new UserDto(

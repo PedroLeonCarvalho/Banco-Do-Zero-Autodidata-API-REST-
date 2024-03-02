@@ -34,10 +34,8 @@ public class UserController {
     @PutMapping
     @Transactional
     public ResponseEntity<UserDto> updateUser(@RequestBody UserDto data) {
-        User user = userService.updateUser(data);
-        UserDto userDto = userService.convertToDto(user);
-        return ResponseEntity.ok(userDto);
-
+        UserDto user = userService.updateUser(data);
+        return ResponseEntity.ok(user);
     }
 
     @DeleteMapping("/{id}")
