@@ -13,6 +13,7 @@ import java.util.Date;
 @Entity
 @EqualsAndHashCode
 @ToString
+
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
