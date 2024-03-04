@@ -47,10 +47,8 @@ public class Account {
         this.creationDate = dto.creationDate();
         this.lastDepositDate = dto.lastDepositDate();
         this.active = dto.active();
-        // Assumindo que o ID do usuário está disponível no DTO
-        User user = new User();
-        user.setId(dto.userId());
-        this.user = user;
+        this.user = dto.user();
+
 
     }
 

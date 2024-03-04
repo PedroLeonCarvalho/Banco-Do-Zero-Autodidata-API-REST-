@@ -1,17 +1,23 @@
 package com.banking_api.banking_api.service;
 
 import com.banking_api.banking_api.domain.account.Account;
-import com.banking_api.banking_api.domain.user.User;
-import com.banking_api.banking_api.dtos.AccountDTO;
-import com.banking_api.banking_api.dtos.AccountDeleteDto;
+import com.banking_api.banking_api.dtos.*;
 import com.banking_api.banking_api.repository.AccountRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AccountService {
-    @Autowired
-    private AccountRepository repository;
+    private final AccountRepository repository;
+
+    public AccountService(AccountRepository repository) {
+        this.repository = repository;
+    }
 
     public Account createAccount(AccountDTO dto) {
         Account account = new Account(dto);
@@ -26,5 +32,29 @@ public class AccountService {
         } else {
             repository.deactivateAccountById(id.id());
         }
+    }
+
+    @Transactional
+    public Page<AccountListDTO> getAllActiveAccounts(Pageable page) {
+        var accounts = repository.findAllByActiveTrue(page);
+        return accounts.map(a -> new AccountListDTO(a.getAccountNumber(), a.getType(), a.isActive(), a.getUser().getName()));
+    }
+
+    public AccountDTO findById(Long id) throws Exception {
+        var account = repository.findById(id).orElseThrow(() -> new Exception("Usuario nao encontrado"));
+
+        return convertToAccountDTO(account);
+    }
+
+    private AccountDTO convertToAccountDTO(Account a) {
+        return new AccountDTO(a.getAccountNumber(),a.getBalance(),a.getType(),a.getCreationDate(),a.getLastDepositDate(),a.isActive(),a.getUser() );
+    }
+
+    public List<AccountDTO> findByUserId(Long userId) {
+    var accountByUserId = repository.findByUserId(userId);
+    return accountByUserId.stream()
+            .map(this::convertToAccountDTO)
+            .collect(Collectors.toList());
+
     }
 }
