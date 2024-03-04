@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.print.Pageable;
+
 @RestController
 @RequestMapping("/account")
 public class AccountController {
@@ -31,5 +33,12 @@ public ResponseEntity  deactivate(@RequestBody AccountDeleteDto id ) throws Exce
     accountService.delete(id);
     return ResponseEntity.noContent().build();
     }
+//
+//    @GetMapping
+//    public ResponseEntity<AccountDTO> list (Pageable  page) {
+//        var accounts = accountService.getAllActiveAccounts(page);
+//
+//        return ResponseEntity()
+//    }
 }
 
