@@ -2,6 +2,7 @@ package com.banking_api.banking_api.service;
 
 import com.banking_api.banking_api.domain.user.User;
 import com.banking_api.banking_api.dtos.UserDto;
+import com.banking_api.banking_api.dtos.UserDtoList;
 import com.banking_api.banking_api.repository.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
@@ -20,10 +21,12 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final ModelMapper modelMapper;
-    public UserService(UserRepository userRepository, ModelMapper modelMapper) {
+
+    //private final ModelMapper modelMapper;
+
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.modelMapper = modelMapper;
+
     }
 
 
@@ -72,9 +75,10 @@ public class UserService {
             user.setPassword(data.password());
         }
 
-        userRepository.save(user);
+        User updatedUser =userRepository.save(user);
+        var userDtoUpdated= convertToDto(updatedUser);
 
-      return convertToDto(user);
+      return userDtoUpdated;
 
     }
 
@@ -100,13 +104,11 @@ public class UserService {
         userRepository.save(user);
     }
 
-    private UserDto convertToListDto(User user) {
-        return modelMapper.map(user, UserDto.class);
-    }
 
-    public Page<UserDto> findAllActiveUsers(Pageable pageable) {
-        Page<User> page = userRepository.findAllByActiveTrue(pageable);
-        return page.map(user -> modelMapper.map(user, UserDto.class));
+
+    public Page<UserDtoList> findAllActiveUsers(Pageable pageable) {
+      var page = userRepository.findAllByActiveTrue(pageable);
+        return page.map(u-> new UserDtoList(u.getName()));
     }
 }
 

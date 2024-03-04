@@ -2,6 +2,7 @@ package com.banking_api.banking_api.controller;
 
 import com.banking_api.banking_api.domain.user.User;
 import com.banking_api.banking_api.dtos.UserDto;
+import com.banking_api.banking_api.dtos.UserDtoList;
 import com.banking_api.banking_api.repository.UserRepository;
 import com.banking_api.banking_api.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -34,7 +35,7 @@ public class UserController {
     @PutMapping
     @Transactional
     public ResponseEntity<UserDto> updateUser(@RequestBody UserDto data) {
-        UserDto user = userService.updateUser(data);
+         UserDto user = userService.updateUser(data);
         return ResponseEntity.ok(user);
     }
 
@@ -47,8 +48,8 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<UserDto>> list(@PageableDefault(size = 10) Pageable pageable) {
-        Page<UserDto> page = userService.findAllActiveUsers(pageable);
+    public ResponseEntity<Page<UserDtoList>> list(@PageableDefault(size = 10) Pageable pageable) {
+        Page<UserDtoList> page = userService.findAllActiveUsers(pageable);
         return ResponseEntity.ok(page);
 
 
