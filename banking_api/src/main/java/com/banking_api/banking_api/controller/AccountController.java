@@ -5,7 +5,6 @@ import com.banking_api.banking_api.dtos.AccountDTO;
 import com.banking_api.banking_api.dtos.AccountDeleteDto;
 import com.banking_api.banking_api.dtos.AccountListDTO;
 import com.banking_api.banking_api.service.AccountService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -21,18 +20,20 @@ import java.util.List;
 public class AccountController {
 
 
-    @Autowired
-    private AccountService accountService;
+
+    private final AccountService accountService;
+
+    public AccountController(AccountService accountService) {
+        this.accountService = accountService;
+    }
 
     @PostMapping
-    @Transactional
     public ResponseEntity <Account> createAccount(@RequestBody AccountDTO dto){
     var account = accountService.createAccount(dto);
     return new ResponseEntity<>(account, HttpStatus.OK);
     }
 
 @DeleteMapping
-@Transactional
 public ResponseEntity  deactivate(@RequestBody AccountDeleteDto id ) throws Exception {
     accountService.delete(id);
     return ResponseEntity.noContent().build();

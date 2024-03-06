@@ -18,14 +18,14 @@ public class AccountService {
     public AccountService(AccountRepository repository) {
         this.repository = repository;
     }
-
+@Transactional
     public Account createAccount(AccountDTO dto) {
         Account account = new Account(dto);
         repository.save(account);
         return account;
     }
 
-
+@Transactional
     public void delete(AccountDeleteDto id) throws Exception {
         if (!repository.existsById(id.id())) {
             throw new Exception("Conta não existe");
@@ -34,7 +34,7 @@ public class AccountService {
         }
     }
 
-    @Transactional
+
     public Page<AccountListDTO> getAllActiveAccounts(Pageable page) {
         var accounts = repository.findAllByActiveTrue(page);
         return accounts.map(a -> new AccountListDTO(a.getAccountNumber(), a.getType(), a.isActive(), a.getUser().getName()));
