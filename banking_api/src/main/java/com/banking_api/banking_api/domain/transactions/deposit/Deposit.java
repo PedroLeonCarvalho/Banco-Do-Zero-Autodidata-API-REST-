@@ -1,9 +1,8 @@
 package com.banking_api.banking_api.domain.transactions.deposit;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.banking_api.banking_api.domain.account.Account;
+import com.banking_api.banking_api.dtos.DepositDTO;
+import jakarta.persistence.*;
 import lombok.*;
 
 
@@ -22,7 +21,14 @@ public class Deposit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Account account;
+
     private BigDecimal value;
     private LocalDateTime timestamp;
+
+    public Deposit(DepositDTO dto) {
+        this.account = new Account(dto.accountId());
+        this.value = dto.value();
+    }
 }

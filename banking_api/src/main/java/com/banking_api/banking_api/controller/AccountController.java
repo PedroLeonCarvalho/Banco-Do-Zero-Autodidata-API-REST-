@@ -28,9 +28,9 @@ public class AccountController {
     }
 
     @PostMapping
-    public ResponseEntity <Account> createAccount(@RequestBody AccountDTO dto){
+    public ResponseEntity <Account> createAccount(@RequestBody AccountDTO dto) throws Exception {
     var account = accountService.createAccount(dto);
-    return new ResponseEntity<>(account, HttpStatus.OK);
+    return new ResponseEntity<>(account, HttpStatus.CREATED);
     }
 
 @DeleteMapping

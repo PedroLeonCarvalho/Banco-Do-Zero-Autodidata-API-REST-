@@ -4,15 +4,17 @@ import com.banking_api.banking_api.domain.account.AccountType;
 import com.banking_api.banking_api.domain.user.User;
 import org.hibernate.annotations.Fetch;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public record AccountDTO(
 
             String accountNumber,
-            double balance,
+            BigDecimal balance,
             AccountType type,
             Date creationDate,
-            Date lastDepositDate,
+            LocalDateTime lastDepositDate,
             boolean active,
-            User user
+            Long user
     ) {}

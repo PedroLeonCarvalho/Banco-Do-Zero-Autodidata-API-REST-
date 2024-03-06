@@ -4,6 +4,8 @@ import com.banking_api.banking_api.dtos.AccountDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -22,7 +24,7 @@ public class Account {
 @Column(name ="account_number")
     private String accountNumber;
 
-    private double balance;
+    private BigDecimal balance;
 
     @Enumerated(EnumType.STRING)
     private AccountType type;
@@ -31,7 +33,7 @@ public class Account {
     private Date creationDate;
 
     @Column(name = "last_deposit_date")
-    private Date lastDepositDate;
+    private LocalDateTime lastDepositDate;
 
     private boolean active;
 
@@ -39,17 +41,10 @@ public class Account {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Account(AccountDTO dto) {
-
-        this.accountNumber = dto.accountNumber();
-        this.balance = dto.balance();
-        this.type = dto.type();
-        this.creationDate = dto.creationDate();
-        this.lastDepositDate = dto.lastDepositDate();
-        this.active = dto.active();
-        this.user = dto.user();
 
 
+
+    public Account( Long aLong) {
+     this.id =id;
     }
-
 }
