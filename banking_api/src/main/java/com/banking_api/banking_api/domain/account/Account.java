@@ -1,5 +1,6 @@
 package com.banking_api.banking_api.domain.account;
 import com.banking_api.banking_api.domain.user.User;
+import com.banking_api.banking_api.dtos.AccountDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,6 +13,7 @@ import java.util.Date;
 @Entity
 @EqualsAndHashCode
 @ToString
+
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,4 +38,18 @@ public class Account {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public Account(AccountDTO dto) {
+
+        this.accountNumber = dto.accountNumber();
+        this.balance = dto.balance();
+        this.type = dto.type();
+        this.creationDate = dto.creationDate();
+        this.lastDepositDate = dto.lastDepositDate();
+        this.active = dto.active();
+        this.user = dto.user();
+
+
+    }
+
 }

@@ -1,10 +1,13 @@
 package com.banking_api.banking_api.domain.user;
 
+import com.banking_api.banking_api.domain.account.Account;
+import com.banking_api.banking_api.dtos.AccountDTO;
 import com.banking_api.banking_api.dtos.UserDto;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -30,6 +33,8 @@ public class User {
     @Column(unique = true)
     private String username;
     private String password;
+    @OneToMany(mappedBy = "user")
+    private List<Account> accounts;
 
     public User(UserDto user) {
         this.id = user.id();
@@ -42,6 +47,10 @@ public class User {
         this.city = user.city();
         this.username = user.username();
         this.password = user.password();
+    }
+
+    public User(Long id) {
+        this.id = id;
     }
 }
 

@@ -3,39 +3,37 @@ package com.banking_api.banking_api.service;
 import com.banking_api.banking_api.domain.user.User;
 import com.banking_api.banking_api.dtos.UserDto;
 import com.banking_api.banking_api.repository.UserRepository;
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
-    private final ModelMapper modelMapper;
-    public UserService(UserRepository userRepository, ModelMapper modelMapper) {
+
+    //private final ModelMapper modelMapper;
+
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.modelMapper = modelMapper;
+
     }
 
 
 
 
-
+@Transactional
     public User createUser(UserDto data) {
         User newUser = new User(data);
         userRepository.save(newUser);
         return newUser;
     }
-
+    @Transactional
     public UserDto updateUser(UserDto data) {
 
         User user = userRepository.getReferenceById(data.id());
@@ -72,9 +70,10 @@ public class UserService {
             user.setPassword(data.password());
         }
 
-        userRepository.save(user);
+        User updatedUser =userRepository.save(user);
+        var userDtoUpdated= convertToDto(updatedUser);
 
-      return convertToDto(user);
+      return userDtoUpdated;
 
     }
 
@@ -100,13 +99,11 @@ public class UserService {
         userRepository.save(user);
     }
 
-    private UserDto convertToListDto(User user) {
-        return modelMapper.map(user, UserDto.class);
-    }
 
-    public Page<UserDto> findAllActiveUsers(Pageable pageable) {
-        Page<User> page = userRepository.findAllByActiveTrue(pageable);
-        return page.map(user -> modelMapper.map(user, UserDto.class));
+
+    public Page<List<UserDto>> findAllActiveUsers(Pageable pageable) {
+      var page = userRepository.findAllByActiveTrue(pageable);
+        return page.map(u-> Collections.singletonList(new UserDto(null, u.getName(), null, null, null,null, null, null, null)));
     }
 }
 
