@@ -1,6 +1,7 @@
 package com.banking_api.banking_api.service;
 
 import com.banking_api.banking_api.domain.account.Account;
+import com.banking_api.banking_api.domain.account.Earnings;
 import com.banking_api.banking_api.dtos.*;
 import com.banking_api.banking_api.repository.AccountRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,13 +23,14 @@ public class AccountService {
     private final DepositService depositService;
 
     private final UserService userService;
+
     public AccountService(AccountRepository repository, @Lazy DepositService depositService, UserService userService) {
         this.repository = repository;
         this.depositService = depositService;
         this.userService = userService;
     }
 
-    public Account createAccount(AccountDTO dto) throws EntityNotFoundException  {
+    public Account createAccount(AccountDTO dto) throws EntityNotFoundException {
 
         Account account = new Account();
         account.setAccountNumber(dto.accountNumber());
@@ -35,7 +38,7 @@ public class AccountService {
         account.setCreationDate(new Date());
         account.setType(dto.type());
         account.setActive(true);
-        account.setUser( userService.findUserById(dto.user()));
+        account.setUser(userService.findUserById(dto.user()));
         account.setLastDepositDate(depositService.getLastDepositDate());
 
         repository.save(account);
@@ -84,4 +87,30 @@ public class AccountService {
     public void save(Account account) {
         repository.save(account);
     }
+
+
+    public void earningsGenerate() {
+       var accounts = repository.findAccountsActiveAndPoupanca ();
+        accounts.setBalance(calculateBalancePlusEarnings());
+
+
+    }
+
+    private BigDecimal calculateBalancePlusEarnings() {
+        var earnings = new Earnings();
+        var account = new Account();
+         earnings.setEarningsAmount(BigDecimal.valueOf(0.01));
+         var oldBalance = account.getBalance();
+        var increase= oldBalance.multiply(earnings.getEarningsAmount());
+
+        return oldBalance.add(increase);
+
+
+    }
+
+
 }
+
+
+
+

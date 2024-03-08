@@ -12,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface AccountRepository extends JpaRepository <Account , Long> {
+public interface AccountRepository extends JpaRepository<Account, Long> {
 
 
     @Modifying
@@ -25,4 +25,12 @@ public interface AccountRepository extends JpaRepository <Account , Long> {
     List<Account> findByUserId(Long userId);
 
     Optional<Account> findByAccountNumber(String accNumber);
+
+    @Query("""
+                SELECT a FROM Account a 
+                WHERE a.active = true AND
+                a.type = 'POUPANCA' AND
+                FUNCTION('MONTHS_BETWEEN', CURRENT_DATE(), a.lastDepositDate) >= 1
+            """)
+    Account findAccountsActiveAndPoupanca();
 }
