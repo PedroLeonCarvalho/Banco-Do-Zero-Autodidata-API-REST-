@@ -2,7 +2,9 @@ package com.banking_api.banking_api.service;
 
 import com.banking_api.banking_api.domain.transactions.transfer.Transfer;
 import com.banking_api.banking_api.dtos.TransferDTO;
+import com.banking_api.banking_api.infra.exception.InsufficientBalanceException;
 import com.banking_api.banking_api.repository.TransferRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,13 +22,13 @@ public class TransferService {
 
     }
 
-    public Transfer transfer(TransferDTO dto) throws Exception {
+    public Transfer transfer(TransferDTO dto) throws EntityNotFoundException, InsufficientBalanceException {
         var sender = accountService.findByAccountId(dto.senderId());
         var receiver = accountService.findByAccountId(dto.receiverId());
         var value = dto.value();
 
         if (sender.getBalance().compareTo(value) < 0) {
-            throw new Exception("Saldo insuficiente para realizar o saque");
+            throw new InsufficientBalanceException("Saldo insuficiente para realizar a operação.");
         }
 
         var newSenderBalance = sender.getBalance().subtract(value);

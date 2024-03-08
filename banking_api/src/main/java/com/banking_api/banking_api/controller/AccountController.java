@@ -5,6 +5,7 @@ import com.banking_api.banking_api.dtos.AccountDTO;
 import com.banking_api.banking_api.dtos.AccountDeleteDto;
 import com.banking_api.banking_api.dtos.AccountListDTO;
 import com.banking_api.banking_api.service.AccountService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -28,13 +29,13 @@ public class AccountController {
     }
 
     @PostMapping
-    public ResponseEntity <Account> createAccount(@RequestBody AccountDTO dto) throws Exception {
+    public ResponseEntity <Account> createAccount(@RequestBody AccountDTO dto) throws EntityNotFoundException {
     var account = accountService.createAccount(dto);
     return new ResponseEntity<>(account, HttpStatus.CREATED);
     }
 
 @DeleteMapping
-public ResponseEntity  deactivate(@RequestBody AccountDeleteDto id ) throws Exception {
+public ResponseEntity  deactivate(@RequestBody AccountDeleteDto id ) throws EntityNotFoundException {
     accountService.delete(id);
     return ResponseEntity.noContent().build();
     }
@@ -45,13 +46,13 @@ public ResponseEntity  deactivate(@RequestBody AccountDeleteDto id ) throws Exce
         return ResponseEntity.ok(accounts);
     }
     @GetMapping("/{id}")
-    public ResponseEntity <AccountDTO> findAccountById ( @PathVariable Long id) throws Exception {
+    public ResponseEntity <AccountDTO> findAccountById ( @PathVariable Long id) throws EntityNotFoundException {
         var account = accountService.findById(id);
         return ResponseEntity.ok(account);
     }
 
     @GetMapping("/by-user")
-    public ResponseEntity<List<AccountDTO>> findAccountByUserId(@RequestParam Long userId) throws Exception {
+    public ResponseEntity<List<AccountDTO>> findAccountByUserId(@RequestParam Long userId) throws EntityNotFoundException {
         var account = accountService.findByUserId(userId);
         return ResponseEntity.ok(account);
     }

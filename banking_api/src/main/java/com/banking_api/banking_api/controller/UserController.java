@@ -2,17 +2,12 @@ package com.banking_api.banking_api.controller;
 
 import com.banking_api.banking_api.domain.user.User;
 import com.banking_api.banking_api.dtos.UserDto;
-import com.banking_api.banking_api.dtos.UserDtoList;
-import com.banking_api.banking_api.repository.UserRepository;
 import com.banking_api.banking_api.service.UserService;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,7 +36,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deactivateUser(@PathVariable Long id) {
         userService.deactivateUser(id);
-        return ResponseEntity.ok("Usuáriao desativado com sucesso");
+        return ResponseEntity.noContent().build();
 
     }
 
