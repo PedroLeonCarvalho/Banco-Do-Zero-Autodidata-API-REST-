@@ -44,7 +44,6 @@ public class DepositService {
     }
 
     public LocalDateTime getLastDepositDate() {
-
         var lastDepositDate = repository.getLastDepositDate();
         Deposit deposit = new Deposit();
         var depositTimestamp = deposit.getTimestamp();
