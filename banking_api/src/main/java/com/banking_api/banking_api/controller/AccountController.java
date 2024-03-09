@@ -11,7 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,32 +21,34 @@ import java.util.List;
 public class AccountController {
 
 
-
     private final AccountService accountService;
+    private final AuthenticationManager authenticationManager;
 
-    public AccountController(AccountService accountService) {
+    public AccountController(AccountService accountService, AuthenticationManager authenticationManager) {
         this.accountService = accountService;
+        this.authenticationManager = authenticationManager;
     }
 
     @PostMapping
-    public ResponseEntity <Account> createAccount(@RequestBody AccountDTO dto) throws EntityNotFoundException {
-    var account = accountService.createAccount(dto);
-    return new ResponseEntity<>(account, HttpStatus.CREATED);
+    public ResponseEntity<Account> createAccount(@RequestBody AccountDTO dto) throws EntityNotFoundException {
+        var account = accountService.createAccount(dto);
+        return new ResponseEntity<>(account, HttpStatus.CREATED);
     }
 
-@DeleteMapping
-public ResponseEntity  deactivate(@RequestBody AccountDeleteDto id ) throws EntityNotFoundException {
-    accountService.delete(id);
-    return ResponseEntity.noContent().build();
+    @DeleteMapping
+    public ResponseEntity deactivate(@RequestBody AccountDeleteDto id) throws EntityNotFoundException {
+        accountService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping
-    public ResponseEntity <Page<AccountListDTO>> list (@PageableDefault(size = 10) Pageable page) {
+    public ResponseEntity<Page<AccountListDTO>> list(@PageableDefault(size = 10) Pageable page) {
         var accounts = accountService.getAllActiveAccounts(page);
         return ResponseEntity.ok(accounts);
     }
+
     @GetMapping("/{id}")
-    public ResponseEntity <AccountDTO> findAccountById ( @PathVariable Long id) throws EntityNotFoundException {
+    public ResponseEntity<AccountDTO> findAccountById(@PathVariable Long id) throws EntityNotFoundException {
         var account = accountService.findById(id);
         return ResponseEntity.ok(account);
     }
