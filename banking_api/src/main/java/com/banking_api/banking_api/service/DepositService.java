@@ -4,6 +4,7 @@ import com.banking_api.banking_api.domain.account.Account;
 import com.banking_api.banking_api.domain.transactions.deposit.Deposit;
 import com.banking_api.banking_api.dtos.DepositDTO;
 import com.banking_api.banking_api.repository.DepositRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class DepositService {
     }
 
     @Transactional
-    public Deposit deposit(DepositDTO dto) throws Exception {
+    public Deposit deposit(DepositDTO dto) throws EntityNotFoundException {
         var account = accountService.findByAccountId(dto.accountId());
         var value = dto.value();
 

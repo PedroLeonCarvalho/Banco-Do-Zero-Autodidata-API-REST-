@@ -4,8 +4,10 @@ import com.banking_api.banking_api.domain.transactions.deposit.Deposit;
 import com.banking_api.banking_api.domain.transactions.withdraw.Withdraw;
 import com.banking_api.banking_api.dtos.DepositDTO;
 import com.banking_api.banking_api.dtos.WithdrawDTO;
+import com.banking_api.banking_api.infra.exception.InsufficientBalanceException;
 import com.banking_api.banking_api.repository.DepositRepository;
 import com.banking_api.banking_api.repository.WithdrawRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,12 +25,12 @@ public class WithdrawService {
     }
 
     @Transactional
-    public Withdraw withdraw (WithdrawDTO dto) throws Exception {
+    public Withdraw withdraw (WithdrawDTO dto) throws EntityNotFoundException , InsufficientBalanceException {
         var account = accountService.findByAccountId(dto.accountId());
         var value = dto.value();
 
         if (account.getBalance().compareTo(value) < 0) {
-            throw new Exception("Saldo insuficiente para realizar o saque");
+            throw new InsufficientBalanceException ("Saldo insuficiente para realizar a operação.");
         }
 
         var newBalance = account.getBalance().subtract(value);

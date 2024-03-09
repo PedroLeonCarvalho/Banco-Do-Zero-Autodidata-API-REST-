@@ -23,13 +23,16 @@ public class UserService {
 
     }
 
+
+
+
+
     public User createUser(UserDto data) {
         User newUser = new User(data);
         userRepository.save(newUser);
         return newUser;
     }
-  
-    @Transactional
+
     public UserDto updateUser(UserDto data) {
 
         User user = userRepository.getReferenceById(data.id());
@@ -90,21 +93,21 @@ public class UserService {
     @Transactional
     public void deactivateUser(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException());
         user.setActive(false);
         userRepository.save(user);
     }
 
 
 
-    public Page<UserDtoList> findAllActiveUsers(Pageable pageable) {
-        var page = userRepository.findAllByActiveTrue(pageable);
-        return page.map(u -> new UserDtoList(u.getName()));
+    public Page<List<UserDto>> findAllActiveUsers(Pageable pageable) {
+      var page = userRepository.findAllByActiveTrue(pageable);
+        return page.map(u-> Collections.singletonList(new UserDto(null, u.getName(), null, null, null,null, null, null, null)));
     }
 
-    public User findUserById(Long id) throws Exception {
+    public User findUserById(Long id) throws EntityNotFoundException {
         return userRepository.findById(id)
-                .orElseThrow(() -> new Exception("Usuário com ID " + id + " não encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException("Usuário com ID " + id + " não encontrado"));
     }
 }
 

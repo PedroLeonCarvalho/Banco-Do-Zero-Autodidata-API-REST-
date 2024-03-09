@@ -1,4 +1,5 @@
 package com.banking_api.banking_api.domain.account;
+
 import com.banking_api.banking_api.domain.user.User;
 import com.banking_api.banking_api.dtos.AccountDTO;
 import jakarta.persistence.*;
@@ -21,7 +22,7 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-@Column(name ="account_number")
+    @Column(name = "account_number")
     private String accountNumber;
 
     private BigDecimal balance;
@@ -40,11 +41,11 @@ public class Account {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+    @Embedded
+    private Earnings earnings;
 
 
-
-
-    public Account( Long aLong) {
-     this.id =id;
+    public Account(Long aLong) {
+        this.id = id;
     }
 }

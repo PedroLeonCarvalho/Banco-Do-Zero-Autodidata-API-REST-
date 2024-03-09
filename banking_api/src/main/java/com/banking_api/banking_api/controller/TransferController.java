@@ -4,8 +4,10 @@ import com.banking_api.banking_api.domain.transactions.transfer.Transfer;
 import com.banking_api.banking_api.domain.transactions.withdraw.Withdraw;
 import com.banking_api.banking_api.dtos.TransferDTO;
 import com.banking_api.banking_api.dtos.WithdrawDTO;
+import com.banking_api.banking_api.infra.exception.InsufficientBalanceException;
 import com.banking_api.banking_api.service.TransferService;
 import com.banking_api.banking_api.service.WithdrawService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +26,7 @@ public class TransferController {
     }
 
     @PostMapping
-    public ResponseEntity<Transfer> toTransfer (@RequestBody TransferDTO dto) throws Exception {
+    public ResponseEntity<Transfer> toTransfer (@RequestBody TransferDTO dto) throws EntityNotFoundException, InsufficientBalanceException {
         var newTransfer = transferService.transfer(dto);
         return ResponseEntity.ok(newTransfer);
     }
