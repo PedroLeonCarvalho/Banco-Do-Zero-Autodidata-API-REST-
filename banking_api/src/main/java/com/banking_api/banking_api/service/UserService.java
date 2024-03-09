@@ -2,20 +2,15 @@ package com.banking_api.banking_api.service;
 
 import com.banking_api.banking_api.domain.user.User;
 import com.banking_api.banking_api.dtos.UserDto;
-import com.banking_api.banking_api.dtos.UserDtoList;
 import com.banking_api.banking_api.repository.UserRepository;
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -28,13 +23,13 @@ public class UserService {
 
     }
 
-
     public User createUser(UserDto data) {
         User newUser = new User(data);
         userRepository.save(newUser);
         return newUser;
     }
-
+  
+    @Transactional
     public UserDto updateUser(UserDto data) {
 
         User user = userRepository.getReferenceById(data.id());
@@ -99,6 +94,7 @@ public class UserService {
         user.setActive(false);
         userRepository.save(user);
     }
+
 
 
     public Page<UserDtoList> findAllActiveUsers(Pageable pageable) {

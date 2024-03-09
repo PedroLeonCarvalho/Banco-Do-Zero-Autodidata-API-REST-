@@ -33,14 +33,12 @@ public class UserController {
     }
 
     @PutMapping
-    @Transactional
     public ResponseEntity<UserDto> updateUser(@RequestBody UserDto data) {
-         UserDto user = userService.updateUser(data);
+        UserDto user = userService.updateUser(data);
         return ResponseEntity.ok(user);
     }
 
     @DeleteMapping("/{id}")
-    @Transactional
     public ResponseEntity<String> deactivateUser(@PathVariable Long id) {
         userService.deactivateUser(id);
         return ResponseEntity.ok("Usuáriao desativado com sucesso");
@@ -48,8 +46,8 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<UserDtoList>> list(@PageableDefault(size = 10) Pageable pageable) {
-        Page<UserDtoList> page = userService.findAllActiveUsers(pageable);
+    public ResponseEntity<Page<List<UserDto>>> list(@PageableDefault(size = 10) Pageable pageable) {
+        Page<List<UserDto>> page = userService.findAllActiveUsers(pageable);
         return ResponseEntity.ok(page);
 
 

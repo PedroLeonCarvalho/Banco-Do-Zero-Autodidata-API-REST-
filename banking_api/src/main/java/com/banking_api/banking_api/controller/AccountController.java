@@ -5,7 +5,6 @@ import com.banking_api.banking_api.dtos.AccountDTO;
 import com.banking_api.banking_api.dtos.AccountDeleteDto;
 import com.banking_api.banking_api.dtos.AccountListDTO;
 import com.banking_api.banking_api.service.AccountService;
-import org.apache.catalina.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -52,7 +51,12 @@ public ResponseEntity  deactivate(@RequestBody AccountDeleteDto id ) throws Exce
     }
 
     @GetMapping("/by-user")
-    public ResponseEntity<List<AccountDTO>>findAccountByUserId(@RequestParam Long userId) throws Exception {
+    public ResponseEntity<List<AccountDTO>>findAccountBy
+      
+      
+      
+      
+      Id(@RequestParam Long userId) throws Exception {
         var account = accountService.findByUserId(userId);
         return ResponseEntity.ok(account);
     }
