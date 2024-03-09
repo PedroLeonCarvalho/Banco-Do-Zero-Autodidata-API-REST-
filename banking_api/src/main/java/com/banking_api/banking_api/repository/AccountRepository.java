@@ -10,10 +10,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository <Account , Long> {
 
-    @Transactional
+
     @Modifying
     @Query("UPDATE Account a SET a.active = false WHERE a.id = :id")
     void deactivateAccountById(@Param("id") Long id);
@@ -22,4 +23,6 @@ public interface AccountRepository extends JpaRepository <Account , Long> {
 
 
     List<Account> findByUserId(Long userId);
+
+    Optional<Account> findByAccountNumber(String accNumber);
 }

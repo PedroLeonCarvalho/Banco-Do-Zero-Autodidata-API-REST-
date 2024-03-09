@@ -1,8 +1,6 @@
 package com.banking_api.banking_api.domain.transactions.withdraw;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.banking_api.banking_api.domain.account.Account;
+import jakarta.persistence.*;
 import lombok.*;
 
 
@@ -23,4 +21,7 @@ public class Withdraw {
     private Long userId;
     private BigDecimal value;
     private LocalDateTime timestamp;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Account account;
 }

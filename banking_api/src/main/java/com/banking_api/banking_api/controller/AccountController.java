@@ -28,7 +28,7 @@ public class AccountController {
     }
 
     @PostMapping
-    public ResponseEntity <Account> createAccount(@RequestBody AccountDTO dto){
+    public ResponseEntity <Account> createAccount(@RequestBody AccountDTO dto) throws Exception {
     var account = accountService.createAccount(dto);
     return new ResponseEntity<>(account, HttpStatus.OK);
     }
@@ -51,7 +51,12 @@ public ResponseEntity  deactivate(@RequestBody AccountDeleteDto id ) throws Exce
     }
 
     @GetMapping("/by-user")
-    public ResponseEntity<List<AccountDTO>> findAccountByUserId(@RequestParam Long userId) throws Exception {
+    public ResponseEntity<List<AccountDTO>>findAccountBy
+      
+      
+      
+      
+      Id(@RequestParam Long userId) throws Exception {
         var account = accountService.findByUserId(userId);
         return ResponseEntity.ok(account);
     }

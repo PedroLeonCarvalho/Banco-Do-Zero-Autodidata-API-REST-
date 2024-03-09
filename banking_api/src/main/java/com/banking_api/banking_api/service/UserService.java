@@ -17,22 +17,18 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    //private final ModelMapper modelMapper;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
 
     }
 
-
-
-
-@Transactional
     public User createUser(UserDto data) {
         User newUser = new User(data);
         userRepository.save(newUser);
         return newUser;
     }
+  
     @Transactional
     public UserDto updateUser(UserDto data) {
 
@@ -70,10 +66,10 @@ public class UserService {
             user.setPassword(data.password());
         }
 
-        User updatedUser =userRepository.save(user);
-        var userDtoUpdated= convertToDto(updatedUser);
+        User updatedUser = userRepository.save(user);
+        var userDtoUpdated = convertToDto(updatedUser);
 
-      return userDtoUpdated;
+        return userDtoUpdated;
 
     }
 
@@ -101,9 +97,14 @@ public class UserService {
 
 
 
-    public Page<List<UserDto>> findAllActiveUsers(Pageable pageable) {
-      var page = userRepository.findAllByActiveTrue(pageable);
-        return page.map(u-> Collections.singletonList(new UserDto(null, u.getName(), null, null, null,null, null, null, null)));
+    public Page<UserDtoList> findAllActiveUsers(Pageable pageable) {
+        var page = userRepository.findAllByActiveTrue(pageable);
+        return page.map(u -> new UserDtoList(u.getName()));
+    }
+
+    public User findUserById(Long id) throws Exception {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new Exception("Usuário com ID " + id + " não encontrado"));
     }
 }
 

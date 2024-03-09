@@ -11,22 +11,18 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@Entity
 public class Transfer {
 
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Getter
-    @Setter
-    @Entity
-    public class Transaction {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
-
         private Long senderId;
         private Long receiverId;
         private BigDecimal value;
         private LocalDateTime timestamp;
     }
-}
