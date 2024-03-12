@@ -3,6 +3,7 @@ package com.banking_api.banking_api.infra.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.banking_api.banking_api.domain.user.User;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +28,22 @@ public class TokenService {
         }
     }
 
-    private Instant expireAt() {
-        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
-
+    public String getSubject(String tokenJWT) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256("123");
+            return JWT.require(algorithm)
+                    .withIssuer("bankingApi")
+                    .build()
+                    .verify(tokenJWT)
+                    .getSubject();
+        } catch (JWTVerificationException exception) {
+            throw new RuntimeException("Token inválido ou expirado");
+        }
     }
-}
+
+        private Instant expireAt () {
+            return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
+
+        }
+    }
+
