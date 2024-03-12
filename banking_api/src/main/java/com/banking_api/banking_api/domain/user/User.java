@@ -5,7 +5,11 @@ import com.banking_api.banking_api.dtos.AccountDTO;
 import com.banking_api.banking_api.dtos.UserDto;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -16,7 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,7 +29,7 @@ public class User {
     private String email;
     @Column(unique = true)
     private String cpf;
-    @Column(name="birth_date")
+    @Column(name = "birth_date")
     private Date birthDate;
     private int age;
     private String city;
@@ -43,7 +47,7 @@ public class User {
         this.cpf = user.cpf();
         this.birthDate = user.birthDate();
         this.age = user.age();
-        this.active=true;
+        this.active = true;
         this.city = user.city();
         this.username = user.username();
         this.password = user.password();
@@ -51,6 +55,41 @@ public class User {
 
     public User(Long id) {
         this.id = id;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public String getUsername() {
+
+        return username;
+    }
+    @Override
+    public String getPassword() {
+        return password;
     }
 }
 
