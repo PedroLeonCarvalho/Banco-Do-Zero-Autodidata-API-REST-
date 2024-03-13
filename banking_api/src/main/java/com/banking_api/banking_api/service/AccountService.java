@@ -91,7 +91,7 @@ public class AccountService {
 
     public void earningsGenerate() {
        var accounts = repository.findAccountsActiveAndPoupanca ();
-        accounts.setBalance(calculateBalancePlusEarnings());
+        accounts.forEach(a -> a.setBalance(calculateBalancePlusEarnings()));
 
 
     }
