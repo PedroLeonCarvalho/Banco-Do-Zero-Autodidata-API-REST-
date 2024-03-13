@@ -15,9 +15,9 @@ public class ExceptionsHandler {
     }
 
 @ExceptionHandler (InsufficientBalanceException.class)
-    public ResponseEntity<?> forbidden403 (InsufficientBalanceException exception) {
-
-     return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exception.getMessage());
+    public ResponseEntity<?> paymentRequired402 (InsufficientBalanceException exception) {
+HttpStatus httpStatus = exception.getHttpStatus();
+     return ResponseEntity.status(httpStatus).body(exception.getMessage());
 }
 
 
