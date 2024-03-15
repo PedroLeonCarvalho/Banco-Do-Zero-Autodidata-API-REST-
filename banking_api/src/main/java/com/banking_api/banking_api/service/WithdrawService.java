@@ -25,7 +25,7 @@ public class WithdrawService {
     }
 
     @Transactional
-    public Withdraw withdraw (WithdrawDTO dto) throws EntityNotFoundException , InsufficientBalanceException {
+    public WithdrawDTO withdraw (WithdrawDTO dto) throws EntityNotFoundException , InsufficientBalanceException {
         var account = accountService.findByAccountId(dto.accountId());
         var value = dto.value();
 
@@ -41,9 +41,13 @@ public class WithdrawService {
         newWithdraw.setValue(value);
         newWithdraw.setTimestamp(LocalDateTime.now());
         newWithdraw.setAccount(account);
-
         repository.save(newWithdraw);
-        return newWithdraw;
+
+
+
+        return new WithdrawDTO(null,null,null,newWithdraw.getTimestamp(),null,newBalance);
     }
+
+
 
 }

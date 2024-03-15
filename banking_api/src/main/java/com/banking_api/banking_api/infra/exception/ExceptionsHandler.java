@@ -14,9 +14,11 @@ public class ExceptionsHandler {
         return ResponseEntity.notFound().build();
     }
 
-@ExceptionHandler (InsufficientBalanceException.class)
-    public ResponseEntity<?> paymentRequired402 (InsufficientBalanceException exception) {
-HttpStatus httpStatus = exception.getHttpStatus();
+@ExceptionHandler (ApiException.class)
+    public ResponseEntity<?> paymentRequired402 (ApiException exception) {
+
+      var httpStatus = exception.getStatus();
+
      return ResponseEntity.status(httpStatus).body(exception.getMessage());
 }
 

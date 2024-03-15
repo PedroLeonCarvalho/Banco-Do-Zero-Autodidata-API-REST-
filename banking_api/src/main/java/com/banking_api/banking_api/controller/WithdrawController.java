@@ -26,7 +26,7 @@ public class WithdrawController {
     }
 
     @PostMapping
-    public ResponseEntity<Withdraw> toWithdraw (@RequestBody WithdrawDTO dto) throws EntityNotFoundException , InsufficientBalanceException{
+    public ResponseEntity<WithdrawDTO> toWithdraw (@RequestBody WithdrawDTO dto) throws EntityNotFoundException , InsufficientBalanceException{
         var newWithdraw = withdrawService.withdraw(dto);
         return ResponseEntity.ok(newWithdraw);
     }
