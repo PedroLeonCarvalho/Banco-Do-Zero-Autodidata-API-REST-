@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Service
 public class WithdrawService {
@@ -23,6 +24,7 @@ public class WithdrawService {
         this.repository = repository;
         this.accountService = accountService;
     }
+
 
     @Transactional
     public WithdrawDTO withdraw (WithdrawDTO dto) throws EntityNotFoundException , InsufficientBalanceException {
@@ -45,7 +47,8 @@ public class WithdrawService {
 
 
 
-        return new WithdrawDTO(null,null,null,newWithdraw.getTimestamp(),null,newBalance);
+
+        return new WithdrawDTO(null,null,null,newWithdraw.getTimestamp().truncatedTo(ChronoUnit.MINUTES),null,newBalance);
     }
 
 

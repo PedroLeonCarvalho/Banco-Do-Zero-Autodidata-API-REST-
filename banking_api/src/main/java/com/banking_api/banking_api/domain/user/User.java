@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -30,7 +31,7 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String cpf;
     @Column(name = "birth_date")
-    private Date birthDate;
+    private LocalDate birthDate;
     private int age;
     private String city;
     private boolean active;

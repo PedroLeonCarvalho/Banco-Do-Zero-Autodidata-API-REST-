@@ -27,10 +27,11 @@ public class UserService {
 
 
 
-    public User createUser(UserDto data) {
+    public UserDto createUser(UserDto data) {
         User newUser = new User(data);
         userRepository.save(newUser);
-        return newUser;
+
+        return convertToDto(newUser);
     }
 
     public UserDto updateUser(UserDto data) {

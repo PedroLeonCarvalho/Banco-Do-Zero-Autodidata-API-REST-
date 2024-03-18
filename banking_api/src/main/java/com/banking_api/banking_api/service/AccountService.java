@@ -35,7 +35,7 @@ public class AccountService {
         Account account = new Account();
         account.setAccountNumber(dto.accountNumber());
         account.setBalance(BigDecimal.ZERO);
-        account.setCreationDate(new Date());
+        account.setCreationDate(LocalDate.now());
         account.setType(dto.type());
         account.setActive(true);
         account.setUser(userService.findUserById(dto.user()));
