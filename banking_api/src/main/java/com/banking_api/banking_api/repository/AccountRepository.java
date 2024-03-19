@@ -32,5 +32,5 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
                 a.type = 'POUPANCA' AND
                 FUNCTION('MONTHS_BETWEEN', CURRENT_DATE(), a.lastDepositDate) >= 1
             """)
-    Account findAccountsActiveAndPoupanca();
+    List<Account> findAccountsActiveAndPoupanca();
 }
