@@ -5,12 +5,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 
+
 public class InsufficientBalanceException extends ApiException {
 
 
         public InsufficientBalanceException(String msg) {
             super(msg , HttpStatus.PAYMENT_REQUIRED);
         }
+
 
     }
 

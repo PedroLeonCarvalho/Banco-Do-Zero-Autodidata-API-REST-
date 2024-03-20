@@ -14,6 +14,7 @@ public class ExceptionsHandler {
         return ResponseEntity.notFound().build();
     }
 
+
 @ExceptionHandler (ApiException.class)
     public ResponseEntity<?> paymentRequired402 (ApiException exception) {
 
