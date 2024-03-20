@@ -91,7 +91,9 @@ public class AccountService {
 
     public void earningsGenerate() {
        var accounts = repository.findAccountsActiveAndPoupanca ();
+
         accounts.forEach(this::updateBalanceWithEarnings);
+
     }
 //Método extra pra usar o "reference method"
     private void updateBalanceWithEarnings(Account account) {
