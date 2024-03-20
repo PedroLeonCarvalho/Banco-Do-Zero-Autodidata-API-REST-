@@ -8,6 +8,7 @@ import com.banking_api.banking_api.dtos.WithdrawDTO;
 import com.banking_api.banking_api.repository.AccountRepository;
 import com.banking_api.banking_api.repository.UserRepository;
 import com.banking_api.banking_api.repository.WithdrawRepository;
+import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,7 +43,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 class WithdrawControllerTest {
 
     @Autowired
-    private MockMvc mvc;
+    private  MockMvc mvc;
 
     @Autowired
     private JacksonTester<WithdrawDTO> jacksonTester;
