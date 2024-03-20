@@ -43,7 +43,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 class WithdrawControllerTest {
 
     @Autowired
-    private  MockMvc mvc;
+    private MockMvc mvc;
 
     @Autowired
     private JacksonTester<WithdrawDTO> jacksonTester;
@@ -101,7 +101,6 @@ class WithdrawControllerTest {
         var responseDTO = new WithdrawDTO(null, null, null, LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), null, accountNewBalance);
 
 
-
         // When
         var response = mvc.perform(post("/withdraw")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -114,11 +113,36 @@ class WithdrawControllerTest {
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
 
 
-
         var jsonExpected = jacksonTester.write(
                         responseDTO)
                 .getJson();
 
         assertThat(response.getContentAsString()).isEqualTo(jsonExpected);
+    }
+
+    @Test
+    @DisplayName("Should return 404 Insuficient Balance")
+    void testInsuficientBalance() throws Exception {
+        // Given
+        var accountId = account.getId();
+        var value = new BigDecimal(2000);
+        var accountNewBalance = account.getBalance().subtract(value);
+
+        var expectedErrorMensage= ("Saldo insuficiente para realizar a operação.");
+
+
+        // When
+        var response = mvc.perform(post("/withdraw")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jacksonTester.write(
+                                new WithdrawDTO(1L, accountId, value, null, null, null))
+                        .getJson())
+        ).andReturn().getResponse();
+
+        // Then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.PAYMENT_REQUIRED.value());
+
+
+        assertThat(response.getContentAsString()).isEqualTo(expectedErrorMensage);
     }
 }
