@@ -3,6 +3,7 @@ package com.banking_api.banking_api.service;
 import com.banking_api.banking_api.domain.transactions.transfer.Transfer;
 import com.banking_api.banking_api.dtos.TransferDTO;
 import com.banking_api.banking_api.infra.exception.InsufficientBalanceException;
+import com.banking_api.banking_api.infra.exception.UnauthorizedUserException;
 import com.banking_api.banking_api.repository.TransferRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -22,10 +23,14 @@ public class TransferService {
 
     }
 
-    public Transfer transfer(TransferDTO dto) throws EntityNotFoundException, InsufficientBalanceException {
+    public Transfer transfer(TransferDTO dto, String username) throws EntityNotFoundException, InsufficientBalanceException, UnauthorizedUserException {
         var sender = accountService.findByAccountId(dto.senderId());
         var receiver = accountService.findByAccountId(dto.receiverId());
         var value = dto.value();
+
+        if (!sender.getUser().getUsername().equals(username)){
+            throw new UnauthorizedUserException("Usuário nao autorizado");
+        }
 
         if (sender.getBalance().compareTo(value) < 0) {
             throw new InsufficientBalanceException("Saldo insuficiente para realizar a operação.");
