@@ -38,6 +38,7 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String username;
     private String password;
+
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Account> accounts;
 

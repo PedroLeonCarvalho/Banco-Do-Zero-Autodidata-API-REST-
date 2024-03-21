@@ -10,8 +10,11 @@ public class InsufficientBalanceException extends ApiException {
 
 
         public InsufficientBalanceException(String msg) {
+
             super(msg , HttpStatus.PAYMENT_REQUIRED);
         }
+
+
 
 
     }

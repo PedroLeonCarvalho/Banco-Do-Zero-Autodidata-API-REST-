@@ -32,7 +32,7 @@ public class TokenService {
                     .withExpiresAt(expireAt())
                     .sign(algorithm);
         } catch (JWTCreationException exception) {
-            throw new RuntimeException("erro ao  gerar o token", exception);
+            throw new RuntimeException("Erro ao  gerar o token", exception);
         }
 
 
@@ -77,5 +77,10 @@ public class TokenService {
 
         return tokenGenerate(user);
     }
+
+
+
+
+
     }
 

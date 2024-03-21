@@ -15,13 +15,19 @@ public class ExceptionsHandler {
     }
 
 
-@ExceptionHandler (ApiException.class)
+@ExceptionHandler (InsufficientBalanceException.class)
     public ResponseEntity<?> paymentRequired402 (ApiException exception) {
 
       var httpStatus = exception.getStatus();
 
      return ResponseEntity.status(httpStatus).body(exception.getMessage());
 }
+    @ExceptionHandler (UnauthorizedUserException.class)
+    public ResponseEntity<?> UnaouthorizedUser401 (ApiException exception) {
 
+        var httpStatus = exception.getStatus();
+
+        return ResponseEntity.status(httpStatus).body(exception.getMessage());
+    }
 
 }

@@ -11,6 +11,7 @@ public class ApiException extends Exception {
     }
 
     public HttpStatus getStatus() {
+
         return httpStatus;
     }
 
