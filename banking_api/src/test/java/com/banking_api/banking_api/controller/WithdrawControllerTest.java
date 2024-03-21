@@ -98,14 +98,18 @@ class WithdrawControllerTest {
         var value = new BigDecimal(100);
         var accountNewBalance = account.getBalance().subtract(value);
 
-        var responseDTO = new WithdrawDTO(null, null, null, LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), null, accountNewBalance);
-
-
+        WithdrawDTO responseDTO = WithdrawDTO.builder()
+                .timestamp(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES))
+                .newBalance(accountNewBalance)
+                .build();
         // When
         var response = mvc.perform(post("/withdraw")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jacksonTester.write(
-                                new WithdrawDTO(1L, accountId, value, null, null, null))
+                                WithdrawDTO.builder()
+                                        .id(1L)
+                                        .accountId(accountId)
+                                        .value(value).build())
                         .getJson())
         ).andReturn().getResponse();
 
@@ -135,7 +139,7 @@ class WithdrawControllerTest {
         var response = mvc.perform(post("/withdraw")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jacksonTester.write(
-                                new WithdrawDTO(1L, accountId, value, null, null, null))
+                                 WithdrawDTO.builder().id(1L).accountId(accountId).value(value).build())
                         .getJson())
         ).andReturn().getResponse();
 

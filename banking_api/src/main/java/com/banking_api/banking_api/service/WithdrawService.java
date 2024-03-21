@@ -28,8 +28,8 @@ public class WithdrawService {
 
     @Transactional
     public WithdrawDTO withdraw (WithdrawDTO dto) throws EntityNotFoundException , InsufficientBalanceException {
-        var account = accountService.findByAccountId(dto.accountId());
-        var value = dto.value();
+        var account = accountService.findByAccountId(dto.getAccountId());
+        var value = dto.getValue();
 
         if (account.getBalance().compareTo(value) < 0) {
             throw new InsufficientBalanceException ("Saldo insuficiente para realizar a operação.");
@@ -48,7 +48,7 @@ public class WithdrawService {
 
 
 
-        return new WithdrawDTO(null,null,null,newWithdraw.getTimestamp().truncatedTo(ChronoUnit.MINUTES),null,newBalance);
+        return  WithdrawDTO.builder().timestamp(newWithdraw.getTimestamp().truncatedTo(ChronoUnit.MINUTES)).newBalance(newBalance).build();
     }
 
 
