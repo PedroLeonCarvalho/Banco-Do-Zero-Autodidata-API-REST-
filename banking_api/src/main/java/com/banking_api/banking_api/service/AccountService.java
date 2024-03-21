@@ -91,15 +91,17 @@ public class AccountService {
 
     public void earningsGenerate() {
        var accounts = repository.findAccountsActiveAndPoupanca ();
-
         accounts.forEach(this::updateBalanceWithEarnings);
-
     }
 //Método extra pra usar o "reference method"
     private void updateBalanceWithEarnings(Account account) {
         BigDecimal newBalance = calculateBalancePlusEarnings(account);
         account.setBalance(newBalance);
+        repository.save(account);
     }
+
+
+
 //   código antigo
 //    private BigDecimal calculateBalancePlusEarnings() {
 //        var earnings = new Earnings();
@@ -116,6 +118,7 @@ public class AccountService {
             BigDecimal increase = oldBalance.multiply(earningsAmount);
             return oldBalance.add(increase);
         }
+
 
 
     }
