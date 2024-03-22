@@ -107,11 +107,14 @@ class WithdrawControllerTest {
                 .timestamp(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES))
                 .newBalance(accountNewBalance)
                 .build();
+
+        //Simula o usuário locagado com esse username =user
         RequestPostProcessor postProcessor = SecurityMockMvcRequestPostProcessors.user("username").roles("USER");
 
 
         // When
         var response = mvc.perform(post("/withdraw")
+                //Acrescenta o usuário logado
                         .with(postProcessor)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jacksonTester.write(
@@ -142,10 +145,12 @@ class WithdrawControllerTest {
         var accountNewBalance = account.getBalance().subtract(value);
 
         var expectedErrorMensage= ("Saldo insuficiente para realizar a operação.");
-
+//Simula o usuário locagado com esse username =user
+        RequestPostProcessor postProcessor = SecurityMockMvcRequestPostProcessors.user("username").roles("USER");
 
         // When
         var response = mvc.perform(post("/withdraw")
+                .with(postProcessor)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jacksonTester.write(
                                  WithdrawDTO.builder().id(1L).accountId(accountId).value(value).build())
