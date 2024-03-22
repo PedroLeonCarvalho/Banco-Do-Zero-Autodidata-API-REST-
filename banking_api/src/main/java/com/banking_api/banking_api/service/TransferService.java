@@ -9,6 +9,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Service
 public class TransferService {
@@ -23,10 +24,10 @@ public class TransferService {
 
     }
 
-    public Transfer transfer(TransferDTO dto, String username) throws EntityNotFoundException, InsufficientBalanceException, UnauthorizedUserException {
-        var sender = accountService.findByAccountId(dto.senderId());
-        var receiver = accountService.findByAccountId(dto.receiverId());
-        var value = dto.value();
+    public TransferDTO transfer(TransferDTO dto, String username) throws EntityNotFoundException, InsufficientBalanceException, UnauthorizedUserException {
+        var sender = accountService.findByAccountId(dto.getSenderId());
+        var receiver = accountService.findByAccountId(dto.getReceiverId());
+        var value = dto.getValue();
 
         if (!sender.getUser().getUsername().equals(username)){
             throw new UnauthorizedUserException("Usuário nao autorizado");
@@ -45,12 +46,18 @@ public class TransferService {
         accountService.save(receiver);
 
         Transfer transfer = new Transfer();
-        transfer.setValue(dto.value());
-        transfer.setTimestamp(LocalDateTime.now());
-        transfer.setSenderId(dto.senderId());
-        transfer.setReceiverId(dto.receiverId());
+        transfer.setValue(dto.getValue());
+        transfer.setTimestamp(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
+        transfer.setSenderId(dto.getSenderId());
+        transfer.setReceiverId(dto.getReceiverId());
 
         repository.save(transfer);
-        return transfer;
+
+
+        return TransferDTO.builder()
+                .timestamp(transfer.getTimestamp())
+                .value(transfer.getValue())
+                .receiverId(transfer.getReceiverId())
+                .build();
     }
 }

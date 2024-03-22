@@ -28,7 +28,7 @@ public class TransferController {
     }
 
     @PostMapping
-    public ResponseEntity<Transfer> toTransfer (@RequestBody TransferDTO dto, Authentication auth) throws EntityNotFoundException, InsufficientBalanceException, UnauthorizedUserException {
+    public ResponseEntity<TransferDTO> toTransfer (@RequestBody TransferDTO dto, Authentication auth) throws EntityNotFoundException, InsufficientBalanceException, UnauthorizedUserException {
         var username = auth.getName();
         var newTransfer = transferService.transfer(dto, username);
         return ResponseEntity.ok(newTransfer);
