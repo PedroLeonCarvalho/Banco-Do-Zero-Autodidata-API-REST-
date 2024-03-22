@@ -137,7 +137,7 @@ class WithdrawControllerTest {
     }
 
     @Test
-    @DisplayName("Should return 404 Insuficient Balance ")
+    @DisplayName("Should return 402 Insuficient Balance ")
     void testInsuficientBalance() throws Exception {
         // Given
         var accountId = account.getId();

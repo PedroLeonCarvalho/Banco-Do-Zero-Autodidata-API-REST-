@@ -30,7 +30,7 @@ public class TransferService {
         var value = dto.getValue();
 
         if (!sender.getUser().getUsername().equals(username)){
-            throw new UnauthorizedUserException("Usuário nao autorizado");
+            throw new UnauthorizedUserException ("Usuário nao autorizado");
         }
         if (receiver.getUser()==null){
             throw new EntityNotFoundException("Usuário de destino não localizado");

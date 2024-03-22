@@ -8,7 +8,7 @@ public class UnauthorizedUserException extends ApiException {
 
         public UnauthorizedUserException(String msg) {
 
-            super(msg , HttpStatus.UNAUTHORIZED);
+            super(msg , HttpStatus.FORBIDDEN);
         }
 
 
