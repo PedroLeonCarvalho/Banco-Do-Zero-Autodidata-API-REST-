@@ -8,7 +8,6 @@ import com.banking_api.banking_api.dtos.WithdrawDTO;
 import com.banking_api.banking_api.repository.AccountRepository;
 import com.banking_api.banking_api.repository.UserRepository;
 import com.banking_api.banking_api.repository.WithdrawRepository;
-import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,10 +18,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -94,6 +98,7 @@ class WithdrawControllerTest {
     @DisplayName("Should return 200 ok and some information")
     void testWithdrawEndpoint() throws Exception {
         // Given
+
         var accountId = account.getId();
         var value = new BigDecimal(100);
         var accountNewBalance = account.getBalance().subtract(value);
@@ -102,8 +107,12 @@ class WithdrawControllerTest {
                 .timestamp(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES))
                 .newBalance(accountNewBalance)
                 .build();
+        RequestPostProcessor postProcessor = SecurityMockMvcRequestPostProcessors.user("username").roles("USER");
+
+
         // When
         var response = mvc.perform(post("/withdraw")
+                        .with(postProcessor)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jacksonTester.write(
                                 WithdrawDTO.builder()

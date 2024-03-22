@@ -28,8 +28,10 @@ public class WithdrawController {
     }
 
     @PostMapping
-    public ResponseEntity<WithdrawDTO> toWithdraw (@RequestBody WithdrawDTO dto, Authentication auth) throws EntityNotFoundException, InsufficientBalanceException, UnauthorizedUserException {
-var username = auth.getName();
+    public ResponseEntity<WithdrawDTO> toWithdraw (@RequestBody WithdrawDTO dto,
+                                                   Authentication auth) throws EntityNotFoundException, InsufficientBalanceException, UnauthorizedUserException {
+
+    var username = auth.getName();
         var newWithdraw = withdrawService.withdraw(dto, username);
         return ResponseEntity.ok(newWithdraw);
     }
