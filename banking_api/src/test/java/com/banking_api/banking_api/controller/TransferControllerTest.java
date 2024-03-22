@@ -47,7 +47,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @Rollback
 
 class TransferControllerTest {
-
     @Autowired
     private  UserRepository userRepository;
     @Autowired
@@ -160,4 +159,67 @@ class TransferControllerTest {
         assertThat(response.getContentAsString()).isEqualTo(jsonExpected);
     }
 
+    @Test
+    @DisplayName("Should return 402 Insuficient Balance")
+    public void transferTest2() throws Exception {
+        //given
+
+        var senderId = senderAccount.getId();
+        var receiverId = receiverAccount.getId();
+        var value = new BigDecimal(2000);
+
+
+
+        RequestPostProcessor postProcessor = SecurityMockMvcRequestPostProcessors.user("username").roles("USER");
+
+        //when
+        var response = mvc.perform(post("/transfer")
+                //Acrescenta o usuário logado
+                .with(postProcessor)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jacksonTester.write(
+                                TransferDTO.builder()
+                                        .senderId(senderId)
+                                        .receiverId(receiverId)
+                                        .value(value).build())
+                        .getJson())
+        ).andReturn().getResponse();
+
+        // Then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.PAYMENT_REQUIRED.value());
+
+
+    }
+
+    @Test
+    @DisplayName("Should return 404 not found")
+    public void transferTest3() throws Exception {
+        //given
+
+        var senderId = senderAccount.getId();
+        var receiverId = 99L;
+        var value = new BigDecimal(100);
+
+
+
+        RequestPostProcessor postProcessor = SecurityMockMvcRequestPostProcessors.user("username").roles("USER");
+
+        //when
+        var response = mvc.perform(post("/transfer")
+                //Acrescenta o usuário logado
+                .with(postProcessor)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jacksonTester.write(
+                                TransferDTO.builder()
+                                        .senderId(senderId)
+                                        .receiverId(receiverId)
+                                        .value(value).build())
+                        .getJson())
+        ).andReturn().getResponse();
+
+        // Then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
+
+
+    }
 }

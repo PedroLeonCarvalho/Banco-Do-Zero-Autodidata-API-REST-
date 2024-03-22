@@ -32,9 +32,12 @@ public class TransferService {
         if (!sender.getUser().getUsername().equals(username)){
             throw new UnauthorizedUserException("Usuário nao autorizado");
         }
+        if (receiver.getUser()==null){
+            throw new EntityNotFoundException("Usuário de destino não localizado");
+        }
 
         if (sender.getBalance().compareTo(value) < 0) {
-            throw new InsufficientBalanceException("Saldo insuficiente para realizar a operação.");
+            throw new InsufficientBalanceException ("Saldo insuficiente para realizar a operação.");
         }
 
         var newSenderBalance = sender.getBalance().subtract(value);

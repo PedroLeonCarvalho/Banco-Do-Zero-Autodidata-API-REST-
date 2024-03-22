@@ -9,21 +9,24 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ExceptionsHandler {
 
- @ExceptionHandler(EntityNotFoundException.class)
- public ResponseEntity<?> notFound404() {
-        return ResponseEntity.notFound().build();
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<?> notFound404(EntityNotFoundException exception) {
+   var msg = exception.getMessage();
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(msg);
     }
 
 
-@ExceptionHandler (InsufficientBalanceException.class)
-    public ResponseEntity<?> paymentRequired402 (ApiException exception) {
+    @ExceptionHandler(InsufficientBalanceException.class)
+    public ResponseEntity<?> paymentRequired402(ApiException exception) {
 
-      var httpStatus = exception.getStatus();
+        var httpStatus = exception.getStatus();
 
-     return ResponseEntity.status(httpStatus).body(exception.getMessage());
-}
-    @ExceptionHandler (UnauthorizedUserException.class)
-    public ResponseEntity<?> UnaouthorizedUser401 (ApiException exception) {
+        return ResponseEntity.status(httpStatus).body(exception.getMessage());
+    }
+
+    @ExceptionHandler(UnauthorizedUserException.class)
+    public ResponseEntity<?> UnaouthorizedUser401(ApiException exception) {
 
         var httpStatus = exception.getStatus();
 
