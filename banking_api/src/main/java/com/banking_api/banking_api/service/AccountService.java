@@ -35,7 +35,7 @@ public class AccountService {
         Account account = new Account();
         account.setAccountNumber(dto.accountNumber());
         account.setBalance(BigDecimal.ZERO);
-        account.setCreationDate(new Date());
+        account.setCreationDate(LocalDate.now());
         account.setType(dto.type());
         account.setActive(true);
         account.setUser(userService.findUserById(dto.user()));
@@ -91,25 +91,40 @@ public class AccountService {
 
     public void earningsGenerate() {
        var accounts = repository.findAccountsActiveAndPoupanca ();
-        accounts.forEach(a -> a.setBalance(calculateBalancePlusEarnings()));
+        accounts.forEach(this::updateBalanceWithEarnings);
+    }
+//Método extra pra usar o "reference method"
+    private void updateBalanceWithEarnings(Account account) {
+        BigDecimal newBalance = calculateBalancePlusEarnings(account);
+        account.setBalance(newBalance);
+        repository.save(account);
+    }
+
+
+
+//   código antigo
+//    private BigDecimal calculateBalancePlusEarnings() {
+//        var earnings = new Earnings();
+//        var account = new Account();
+//         earnings.setEarningsAmount(BigDecimal.valueOf(0.01));
+//         var oldBalance = account.getBalance();
+//        var increase= oldBalance.multiply(earnings.getEarningsAmount());
+//
+//        return oldBalance.add(increase);
+
+        private BigDecimal calculateBalancePlusEarnings(Account account) {
+            BigDecimal earningsAmount = new BigDecimal("0.01"); // Defina o valor dos ganhos aqui
+            BigDecimal oldBalance = account.getBalance();
+            BigDecimal increase = oldBalance.multiply(earningsAmount);
+            return oldBalance.add(increase);
+        }
+
 
 
     }
 
-    private BigDecimal calculateBalancePlusEarnings() {
-        var earnings = new Earnings();
-        var account = new Account();
-         earnings.setEarningsAmount(BigDecimal.valueOf(0.01));
-         var oldBalance = account.getBalance();
-        var increase= oldBalance.multiply(earnings.getEarningsAmount());
-
-        return oldBalance.add(increase);
 
 
-    }
-
-
-}
 
 
 

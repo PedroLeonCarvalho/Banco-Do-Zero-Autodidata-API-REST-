@@ -30,7 +30,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
                 SELECT a FROM Account a 
                 WHERE a.active = true AND
                 a.type = 'POUPANCA' AND
-                FUNCTION('MONTHS_BETWEEN', CURRENT_DATE(), a.lastDepositDate) >= 1
+                DATEDIFF(CURRENT_DATE(), a.lastDepositDate) >= 30
             """)
     List<Account> findAccountsActiveAndPoupanca();
 }
