@@ -23,7 +23,7 @@ public class DepositController {
     }
 
     @PostMapping
-    public ResponseEntity<Deposit> toDeposit(@RequestBody DepositDTO dto) throws EntityNotFoundException {
+    public ResponseEntity<DepositDTO> toDeposit(@RequestBody DepositDTO dto) throws EntityNotFoundException {
         var newDeposit = depositService.deposit(dto);
         return ResponseEntity.ok(newDeposit);
     }

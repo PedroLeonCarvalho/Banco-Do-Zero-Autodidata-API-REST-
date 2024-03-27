@@ -28,7 +28,7 @@ public class Deposit {
     private LocalDateTime timestamp;
 
     public Deposit(DepositDTO dto) {
-        this.account = new Account(dto.accountId());
-        this.value = dto.value();
+        this.account = new Account(dto.getAccountId());
+        this.value = dto.getValue();
     }
 }

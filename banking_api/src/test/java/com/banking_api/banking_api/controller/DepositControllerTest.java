@@ -4,10 +4,10 @@ import com.banking_api.banking_api.domain.account.Account;
 import com.banking_api.banking_api.domain.account.AccountType;
 import com.banking_api.banking_api.domain.account.Earnings;
 import com.banking_api.banking_api.domain.user.User;
+import com.banking_api.banking_api.dtos.DepositDTO;
 import com.banking_api.banking_api.dtos.WithdrawDTO;
 import com.banking_api.banking_api.repository.AccountRepository;
 import com.banking_api.banking_api.repository.UserRepository;
-import com.banking_api.banking_api.repository.WithdrawRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,9 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.annotation.Rollback;
@@ -32,9 +29,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @SpringBootTest
@@ -44,17 +41,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @ActiveProfiles("test")
 @Transactional
 @Rollback
-class WithdrawControllerTest {
+class DepositControllerTest {
 
     @Autowired
     private MockMvc mvc;
 
     @Autowired
-    private JacksonTester<WithdrawDTO> jacksonTester;
+    private JacksonTester<DepositDTO> jacksonTester;
     @Autowired
     private AccountRepository accountRepository;
-    @Autowired
-    private WithdrawRepository withdrawRepository;
     @Autowired
     private UserRepository userRepository;
 
@@ -80,7 +75,7 @@ class WithdrawControllerTest {
         account.setBalance(new BigDecimal("1000.00"));
         account.setType(AccountType.POUPANCA);
         account.setCreationDate(LocalDate.of(2024, 3, 17));
-        account.setLastDepositDate(LocalDateTime.of(2024, 3, 17, 12, 0));
+        account.setLastDepositDate(LocalDateTime.of(2023, 3, 17, 12, 0));
         account.setActive(true);
         account.setUser(user);
         accountRepository.save(account);
@@ -93,76 +88,57 @@ class WithdrawControllerTest {
         accountRepository.save(account);
     }
 
-
     @Test
-    @DisplayName("Should return 200 ok and some information")
-    void testWithdrawEndpoint() throws Exception {
+    @DisplayName("Retorna 200 ok e JSON com informmações")
+    void testDeposit_200ok() throws Exception {
         // Given
 
+
         var accountId = account.getId();
-        var value = new BigDecimal(100);
-        var accountNewBalance = account.getBalance().subtract(value);
-
-        WithdrawDTO responseDTO = WithdrawDTO.builder()
-                .timestamp(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES))
-                .newBalance(accountNewBalance)
-                .build();
-
-        //Simula o usuário locagado com esse username =user
+        var value = new BigDecimal(2000);
+        var accountNewBalance = account.getBalance().add(value);
+        var responseDTO = DepositDTO.builder().value(value).newBalance(accountNewBalance).build();
+        var jsonExpected = jacksonTester.write(responseDTO).getJson();
+        //Simula o usuário logado com esse username
         RequestPostProcessor postProcessor = SecurityMockMvcRequestPostProcessors.user("username").roles("USER");
 
-
         // When
-        var response = mvc.perform(post("/withdraw")
-                //Acrescenta o usuário logado
-                        .with(postProcessor)
+        var response = mvc.perform(post("/deposit")
+                .with(postProcessor)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jacksonTester.write(
-                                WithdrawDTO.builder()
-                                        .id(1L)
-                                        .accountId(accountId)
-                                        .value(value).build())
+                .content(jacksonTester.write(DepositDTO.builder().accountId(accountId).value(value).build()
+                        )
                         .getJson())
         ).andReturn().getResponse();
 
         // Then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-
-
-        var jsonExpected = jacksonTester.write(
-                        responseDTO)
-                .getJson();
-
         assertThat(response.getContentAsString()).isEqualTo(jsonExpected);
     }
 
     @Test
-    @DisplayName("Should return 402 Insuficient Balance ")
-    void testInsuficientBalance() throws Exception {
+    @DisplayName("Retorna 404, conta não localizada")
+    void testDeposit_AccountNotFound() throws Exception {
         // Given
-        var accountId = account.getId();
-        var value = new BigDecimal(2000);
-        var accountNewBalance = account.getBalance().subtract(value);
 
-        var expectedErrorMensage= ("Saldo insuficiente para realizar a operação.");
-//Simula o usuário logado com esse username
+        var accountId = 99L;
+        var value = new BigDecimal(2000);
+
+        //Simula o usuário logado com esse username
         RequestPostProcessor postProcessor = SecurityMockMvcRequestPostProcessors.user("username").roles("USER");
 
         // When
-        var response = mvc.perform(post("/withdraw")
+        var response = mvc.perform(post("/deposit")
                 .with(postProcessor)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jacksonTester.write(
-                                 WithdrawDTO.builder().id(1L).accountId(accountId).value(value).build())
+                .content(jacksonTester.write(DepositDTO.builder().accountId(accountId).value(value).build()
+                        )
                         .getJson())
         ).andReturn().getResponse();
 
         // Then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.PAYMENT_REQUIRED.value());
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
 
-
-        assertThat(response.getContentAsString()).isEqualTo(expectedErrorMensage);
     }
-
 
 }

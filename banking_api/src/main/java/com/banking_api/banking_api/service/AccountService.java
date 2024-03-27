@@ -91,8 +91,11 @@ public class AccountService {
 
     public void earningsGenerate() {
        var accounts = repository.findAccountsActiveAndPoupanca ();
-        accounts.forEach(this::updateBalanceWithEarnings);
-    }
+       if (accounts == null|| accounts.isEmpty()) { throw new EntityNotFoundException("Não há contas Poupança ativas com rendimentos pendentes"); }
+       else {
+           accounts.forEach(this::updateBalanceWithEarnings);
+       }  }
+
 //Método extra pra usar o "reference method"
     private void updateBalanceWithEarnings(Account account) {
         BigDecimal newBalance = calculateBalancePlusEarnings(account);
@@ -100,17 +103,6 @@ public class AccountService {
         repository.save(account);
     }
 
-
-
-//   código antigo
-//    private BigDecimal calculateBalancePlusEarnings() {
-//        var earnings = new Earnings();
-//        var account = new Account();
-//         earnings.setEarningsAmount(BigDecimal.valueOf(0.01));
-//         var oldBalance = account.getBalance();
-//        var increase= oldBalance.multiply(earnings.getEarningsAmount());
-//
-//        return oldBalance.add(increase);
 
         private BigDecimal calculateBalancePlusEarnings(Account account) {
             BigDecimal earningsAmount = new BigDecimal("0.01"); // Defina o valor dos ganhos aqui
