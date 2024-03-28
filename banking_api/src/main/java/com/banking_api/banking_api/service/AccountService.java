@@ -96,8 +96,8 @@ public class AccountService {
            accounts.forEach(this::updateBalanceWithEarnings);
        }  }
 
-//Método extra pra usar o "reference method"
-    private void updateBalanceWithEarnings(Account account) {
+//Método extra pra poder usar o "reference method" no método "erningsGenerate()"
+    public void updateBalanceWithEarnings(Account account) {
         BigDecimal newBalance = calculateBalancePlusEarnings(account);
         account.setBalance(newBalance);
         repository.save(account);
