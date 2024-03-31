@@ -33,6 +33,7 @@ public class AccountService {
     public Account createAccount(AccountDTO dto) throws EntityNotFoundException {
 
         Account account = new Account();
+
         account.setAccountNumber(dto.accountNumber());
         account.setBalance(BigDecimal.ZERO);
         account.setCreationDate(LocalDate.now());
