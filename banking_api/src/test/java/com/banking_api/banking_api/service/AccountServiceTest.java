@@ -99,7 +99,7 @@ class AccountServiceTest {
 
 
     @Test
-    void createAccount_202Created() {
+    void whenCreateAccount_then202Created() {
     }
 
     @Test
