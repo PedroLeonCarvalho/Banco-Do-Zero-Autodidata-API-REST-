@@ -25,6 +25,7 @@ public class Deposit {
     private Account account;
 
     private BigDecimal value;
+
     private LocalDateTime timestamp;
 
     public Deposit(DepositDTO dto) {

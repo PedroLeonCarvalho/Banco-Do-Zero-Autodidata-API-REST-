@@ -28,18 +28,19 @@ class DepositServiceTest {
     @Mock
     private AccountRepository repository;
     @InjectMocks
-    private  DepositService depositService;
+    private DepositService depositService;
     @Mock
-    private  UserService userService;
+    private UserService userService;
     @Mock
     private DepositRepository depositRepository;
 
-   @Mock
+    @Mock
     private AccountService accountService;
 
     Account account = new Account();
+
     @BeforeEach
-    void setup () {
+    void setup() {
         MockitoAnnotations.initMocks(this);
 
         User user = new User();
@@ -88,7 +89,7 @@ class DepositServiceTest {
         verify(accountService, times(1)).save(account);
         verify(depositRepository, times(1)).save(any());
 
-     assertEquals(new BigDecimal(1100), account.getBalance().setScale(0));
+        assertEquals(new BigDecimal(1100), account.getBalance().setScale(0));
 
     }
 
@@ -106,13 +107,22 @@ class DepositServiceTest {
         verify(accountService, times(0)).save(account);
         verify(depositRepository, times(0)).save(any());
 
-        assertThrows(EntityNotFoundException.class, () -> {depositService.deposit(dto);},"Conta não localizada");
+        assertThrows(EntityNotFoundException.class, () -> {
+            depositService.deposit(dto);
+        }, "Conta não localizada");
 
     }
 
+    // aqui por exemplo só testo se o repository foi chamado dentro do método, por que a lógica de pegar o ultimo depósito está na Query, que não dá pra testar  com repository Mockado"
     @Test
     void getLastDepositDate() {
+        var dto = DepositDTO.builder().accountId(account.getId()).value(new BigDecimal(100)).build();
+        Deposit deposit = new Deposit();
+        when(depositRepository.getLastDepositDate()).thenReturn(deposit);
+        depositService.getLastDepositDate();
+        verify(depositRepository, times(1)).getLastDepositDate();
+    }
+
 
 
     }
-}
