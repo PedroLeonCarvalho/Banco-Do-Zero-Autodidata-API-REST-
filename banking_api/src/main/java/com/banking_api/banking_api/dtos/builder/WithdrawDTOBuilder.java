@@ -9,7 +9,6 @@ public   class WithdrawDTOBuilder {
 
 
     public WithdrawDTOBuilder( ) {
-
         this.withdrawDTOExercicioSimulacao = new WithdrawDTOExercicioSimulacao();
     }
 
