@@ -25,10 +25,11 @@ public class Deposit {
     private Account account;
 
     private BigDecimal value;
+
     private LocalDateTime timestamp;
 
     public Deposit(DepositDTO dto) {
-        this.account = new Account(dto.accountId());
-        this.value = dto.value();
+        this.account = new Account(dto.getAccountId());
+        this.value = dto.getValue();
     }
 }

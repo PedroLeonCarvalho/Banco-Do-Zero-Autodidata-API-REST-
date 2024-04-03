@@ -9,6 +9,7 @@ import com.banking_api.banking_api.infra.exception.UnauthorizedUserException;
 import com.banking_api.banking_api.service.TransferService;
 import com.banking_api.banking_api.service.WithdrawService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,7 +29,7 @@ public class TransferController {
     }
 
     @PostMapping
-    public ResponseEntity<TransferDTO> toTransfer (@RequestBody TransferDTO dto, Authentication auth) throws EntityNotFoundException, InsufficientBalanceException, UnauthorizedUserException {
+    public ResponseEntity<TransferDTO> toTransfer (@RequestBody @Valid TransferDTO dto, Authentication auth) throws EntityNotFoundException, InsufficientBalanceException, UnauthorizedUserException {
         var username = auth.getName();
         var newTransfer = transferService.transfer(dto, username);
         return ResponseEntity.ok(newTransfer);

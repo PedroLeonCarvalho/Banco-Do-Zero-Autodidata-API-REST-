@@ -1,4 +1,4 @@
-package com.banking_api.banking_api.dtos;
+package com.banking_api.banking_api.dtos.builder;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotNull;
@@ -10,13 +10,10 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
 @Setter
-@Builder
-public class WithdrawDTO {
+public class WithdrawDTOExercicioSimulacao {
     @NotNull(message = "O ID não pode ser nulo")
     private Long id;
 
@@ -37,3 +34,5 @@ public class WithdrawDTO {
     @NotNull(message = "O novo saldo não pode ser nulo")
     @Positive(message = "O novo saldo deve ser positivo")
     private BigDecimal newBalance;}
+
+

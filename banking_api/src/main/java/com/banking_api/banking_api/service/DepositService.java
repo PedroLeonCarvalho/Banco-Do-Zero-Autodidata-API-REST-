@@ -26,9 +26,12 @@ public class DepositService {
     }
 
     @Transactional
-    public Deposit deposit(DepositDTO dto) throws EntityNotFoundException {
-        var account = accountService.findByAccountId(dto.accountId());
-        var value = dto.value();
+    public DepositDTO deposit(DepositDTO dto) throws EntityNotFoundException {
+        var account = accountService.findByAccountId(dto.getAccountId());
+        if (account == null) { throw  new EntityNotFoundException("Conta não localizada");}
+        else {
+
+        var value = dto.getValue();
 
         var newBalance = account.getBalance().add(value);
         account.setBalance(newBalance);
@@ -40,7 +43,8 @@ public class DepositService {
         newDeposit.setAccount(account);
 
         repository.save(newDeposit);
-        return newDeposit;
+        return DepositDTO.builder().value(value).newBalance(newBalance).build();
+        }
     }
 
     public LocalDateTime getLastDepositDate() {

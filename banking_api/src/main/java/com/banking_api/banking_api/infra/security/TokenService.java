@@ -24,6 +24,7 @@ public class TokenService {
 
 
     public String tokenGenerate(UserDetails user) {
+
         try {
             Algorithm algorithm = Algorithm.HMAC256("123");
             return JWT.create()

@@ -1,5 +1,6 @@
 package com.banking_api.banking_api.service;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import com.banking_api.banking_api.domain.account.Account;
 import com.banking_api.banking_api.domain.account.Earnings;
 import com.banking_api.banking_api.dtos.*;
@@ -8,6 +9,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -88,29 +90,27 @@ public class AccountService {
         repository.save(account);
     }
 
-
+    //Chama a cada 1 minuto
+    // @Scheduled(cron = "0 * * ? * *")
+@Scheduled(cron = "0 0 0 * * ?")
     public void earningsGenerate() {
        var accounts = repository.findAccountsActiveAndPoupanca ();
-        accounts.forEach(this::updateBalanceWithEarnings);
+       if (accounts == null|| accounts.isEmpty()) { throw new EntityNotFoundException("Não há contas Poupança ativas com rendimentos pendentes"); }
+       else {
+           accounts.forEach(this::updateBalanceWithEarnings);
+       }
+
     }
-//Método extra pra usar o "reference method"
-    private void updateBalanceWithEarnings(Account account) {
+
+
+
+//Método extra pra poder usar o "reference method" no método "erningsGenerate()"
+    public void updateBalanceWithEarnings(Account account) {
         BigDecimal newBalance = calculateBalancePlusEarnings(account);
         account.setBalance(newBalance);
         repository.save(account);
     }
 
-
-
-//   código antigo
-//    private BigDecimal calculateBalancePlusEarnings() {
-//        var earnings = new Earnings();
-//        var account = new Account();
-//         earnings.setEarningsAmount(BigDecimal.valueOf(0.01));
-//         var oldBalance = account.getBalance();
-//        var increase= oldBalance.multiply(earnings.getEarningsAmount());
-//
-//        return oldBalance.add(increase);
 
         private BigDecimal calculateBalancePlusEarnings(Account account) {
             BigDecimal earningsAmount = new BigDecimal("0.01"); // Defina o valor dos ganhos aqui
