@@ -17,7 +17,7 @@ public class EarningsController {
     }
 
     @GetMapping
-    public ResponseEntity generateEarnings (){
+    public ResponseEntity generateEarnings () {
         accountService.earningsGenerate();
         return ResponseEntity.ok("Rendimentos gerados");
     }
