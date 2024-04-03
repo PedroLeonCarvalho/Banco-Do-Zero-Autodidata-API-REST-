@@ -93,7 +93,6 @@ public class AccountService {
     //Chama a cada 1 minuto
     // @Scheduled(cron = "0 * * ? * *")
 @Scheduled(cron = "0 0 0 * * ?")
-
     public void earningsGenerate() {
        var accounts = repository.findAccountsActiveAndPoupanca ();
        if (accounts == null|| accounts.isEmpty()) { throw new EntityNotFoundException("Não há contas Poupança ativas com rendimentos pendentes"); }

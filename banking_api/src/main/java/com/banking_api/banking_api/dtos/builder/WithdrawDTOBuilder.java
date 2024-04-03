@@ -13,32 +13,32 @@ public   class WithdrawDTOBuilder {
     }
 
 
-    public WithdrawDTOBuilder buildId (Long id) {
+    public WithdrawDTOBuilder id (Long id) {
         this.withdrawDTOExercicioSimulacao.setId(id);
         return this;
     }
 
-    public WithdrawDTOBuilder buildAccount(Long account) {
+    public WithdrawDTOBuilder account(Long account) {
         this.withdrawDTOExercicioSimulacao.setAccount(account);
         return this;
     }
 
-    public WithdrawDTOBuilder buildValue(BigDecimal value) {
+    public WithdrawDTOBuilder value(BigDecimal value) {
         this.withdrawDTOExercicioSimulacao.setValue(value);
         return this;
     }
 
-    public WithdrawDTOBuilder buildAccountId(Long accountId) {
+    public WithdrawDTOBuilder accountId(Long accountId) {
         this.withdrawDTOExercicioSimulacao.setAccountId(accountId);
         return this;
     }
 
-    public WithdrawDTOBuilder buildTimestamp(LocalDateTime timestamp) {
+    public WithdrawDTOBuilder timestamp(LocalDateTime timestamp) {
         this.withdrawDTOExercicioSimulacao.setTimestamp(timestamp);
         return this;
     }
 
-    public WithdrawDTOBuilder buildNewBalance(BigDecimal newBalance) {
+    public WithdrawDTOBuilder newBalance(BigDecimal newBalance) {
         this.withdrawDTOExercicioSimulacao.setNewBalance(newBalance);
         return this;
     }
