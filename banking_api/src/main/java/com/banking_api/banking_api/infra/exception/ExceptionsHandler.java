@@ -33,4 +33,12 @@ public class ExceptionsHandler {
         return ResponseEntity.status(httpStatus).body(exception.getMessage());
     }
 
+    @ExceptionHandler(BadResponseException.class)
+    public ResponseEntity<?> badResponseFromProvider200 (ApiException exception) {
+
+        var httpStatus = exception.getStatus();
+
+        return ResponseEntity.status(httpStatus).body(exception.getMessage());
+    }
+
 }

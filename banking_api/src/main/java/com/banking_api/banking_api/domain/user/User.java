@@ -53,6 +53,7 @@ public class User implements UserDetails {
         this.city = user.city();
         this.username = user.username();
         this.password = user.password();
+
     }
 
     public User(Long id) {

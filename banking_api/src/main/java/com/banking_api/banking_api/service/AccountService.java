@@ -1,21 +1,27 @@
 package com.banking_api.banking_api.service;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import com.banking_api.banking_api.domain.account.Account;
-import com.banking_api.banking_api.domain.account.Earnings;
 import com.banking_api.banking_api.dtos.*;
+import com.banking_api.banking_api.infra.exception.BadResponseException;
 import com.banking_api.banking_api.repository.AccountRepository;
+import com.google.gson.Gson;
 import jakarta.persistence.EntityNotFoundException;
+import org.json.JSONException;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+
+import java.lang.reflect.Type;
+
+import com.google.gson.reflect.TypeToken;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,11 +30,14 @@ public class AccountService {
     private final AccountRepository repository;
     private final DepositService depositService;
 
+    private final RestTemplate restTemplate;
+
     private final UserService userService;
 
-    public AccountService(AccountRepository repository, @Lazy DepositService depositService, UserService userService) {
+    public AccountService(AccountRepository repository, @Lazy DepositService depositService, RestTemplate restTemplate, UserService userService) {
         this.repository = repository;
         this.depositService = depositService;
+        this.restTemplate = restTemplate;
         this.userService = userService;
     }
 
@@ -92,36 +101,64 @@ public class AccountService {
 
     //Chama a cada 1 minuto
     // @Scheduled(cron = "0 * * ? * *")
-@Scheduled(cron = "0 0 0 * * ?")
-    public void earningsGenerate() {
-       var accounts = repository.findAccountsActiveAndPoupanca ();
-       if (accounts == null|| accounts.isEmpty()) { throw new EntityNotFoundException("Não há contas Poupança ativas com rendimentos pendentes"); }
-       else {
-           accounts.forEach(this::updateBalanceWithEarnings);
-       }
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void earningsGenerate() throws JSONException, BadResponseException {
+        var accounts = repository.findAccountsActiveAndPoupanca();
+        if (accounts == null || accounts.isEmpty()) {
+            throw new EntityNotFoundException("Não há contas Poupança ativas com rendimentos pendentes");
+        } else {
+            for (Account account : accounts) {
+                updateBalanceWithEarnings(account);
+            }
+        }
 
     }
 
 
-
-//Método extra pra poder usar o "reference method" no método "erningsGenerate()"
-    public void updateBalanceWithEarnings(Account account) {
+    public void updateBalanceWithEarnings(Account account) throws JSONException, BadResponseException {
         BigDecimal newBalance = calculateBalancePlusEarnings(account);
         account.setBalance(newBalance);
         repository.save(account);
     }
 
 
-        private BigDecimal calculateBalancePlusEarnings(Account account) {
-            BigDecimal earningsAmount = new BigDecimal("0.01"); // Defina o valor dos ganhos aqui
-            BigDecimal oldBalance = account.getBalance();
-            BigDecimal increase = oldBalance.multiply(earningsAmount);
-            return oldBalance.add(increase);
-        }
+    private BigDecimal calculateBalancePlusEarnings(Account account) throws JSONException, BadResponseException {
 
+        var value = getSelicDataValue();
+        BigDecimal earningsAmount = new BigDecimal("0.005").add(value);
+        BigDecimal oldBalance = account.getBalance();
+        BigDecimal increase = oldBalance.multiply(earningsAmount);
 
-
+        return oldBalance.add(increase);
     }
+
+
+    public BigDecimal getSelicDataValue() throws BadResponseException {
+        var dataInicial = LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        var dataFinal = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
+        String url = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados?formato=json&dataInicial=" + dataInicial + "&dataFinal=" + dataFinal;
+
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+if(response.getStatusCode().is2xxSuccessful()) {
+
+        var jsonArray = response.getBody();
+
+       var gson = new Gson();
+        Type listType = new TypeToken<List<SelicDTO>>() {
+        }.getType();
+
+        List<SelicDTO> gsonList = gson.fromJson(jsonArray, listType);
+
+        var valor = gsonList.get(0).getValor();
+
+        return new BigDecimal(valor);
+
+    } else throw new BadResponseException("A taxa SELIC nao pode ser calculado por mal funcionamento do site do banco");
+}}
+
+
+
 
 
 

@@ -6,23 +6,23 @@ import com.banking_api.banking_api.domain.account.Earnings;
 import com.banking_api.banking_api.domain.user.User;
 import com.banking_api.banking_api.dtos.AccountDTO;
 import com.banking_api.banking_api.dtos.AccountDeleteDto;
+import com.banking_api.banking_api.infra.exception.BadResponseException;
 import com.banking_api.banking_api.repository.AccountRepository;
 import com.banking_api.banking_api.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.json.JSONException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -82,9 +82,9 @@ class AccountServiceTest {
 
 
     @Test
-    void whenTestEarningsGenerate_thenReturnSucess() {
+    void whenTestEarningsGenerate_thenReturnSucess() throws JSONException, BadResponseException {
         when(repository.findAccountsActiveAndPoupanca()).thenReturn(accounts);
-        accountService.earningsGenerate();
+        accountService.earningsGenerate ();
         verify(repository, times(accounts.size())).findAccountsActiveAndPoupanca();
     }
 
@@ -101,7 +101,7 @@ class AccountServiceTest {
     @Test
     @DisplayName("Both tests updateBalanceWithEarnings and calculateBalancePlusEarnings are tested here. " +
             "The final account balance is rightly calculated after have its earnings")
-    void whenUpdateBalanceWithEarnings_thenResponseHasTheRightValueAdded() {
+    void whenUpdateBalanceWithEarnings_thenResponseHasTheRightValueAdded() throws JSONException, BadResponseException {
         var expectedNewBalance = BigDecimal.valueOf(1010);
         accountService.updateBalanceWithEarnings(account);
         verify(repository, times(2)).save(account);
