@@ -17,12 +17,10 @@ import java.math.BigDecimal;
 public class EarningsController {
 
     private final AccountService accountService;
-    @Autowired
-    private RestTemplate restTemplate;
+
 
     public EarningsController(AccountService accountService) {
         this.accountService = accountService;
-        ;
     }
 
     @GetMapping
@@ -32,11 +30,6 @@ public class EarningsController {
     }
 
 
-    @GetMapping("/selic")
-    public BigDecimal getSelicData() throws BadResponseException {
-        return accountService.getSelicDataValue();
-
-    }
 }
 
 
