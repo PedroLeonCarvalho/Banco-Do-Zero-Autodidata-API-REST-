@@ -6,12 +6,12 @@ import java.time.LocalDateTime;
 public class ExemploUsoBuilder {
 
    WithdrawDTOExercicioSimulacao dto = new WithdrawDTOBuilder()
-           .buildId(1L)
-           .buildAccount(2L)
-           .buildValue(BigDecimal.valueOf(100))
-           .buildTimestamp(LocalDateTime.now())
-           .buildAccountId(3L)
-           .buildNewBalance(BigDecimal.valueOf(500))
+           .id(1L)
+           .account(2L)
+           .value(BigDecimal.valueOf(100))
+           .timestamp(LocalDateTime.now())
+           .accountId(3L)
+           .newBalance(BigDecimal.valueOf(500))
            .build();
 
 }

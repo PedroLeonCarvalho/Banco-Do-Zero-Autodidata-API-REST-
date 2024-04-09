@@ -1,21 +1,26 @@
 package com.banking_api.banking_api.service;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import com.banking_api.banking_api.domain.account.Account;
-import com.banking_api.banking_api.domain.account.Earnings;
-import com.banking_api.banking_api.dtos.*;
+import com.banking_api.banking_api.dtos.AccountDTO;
+import com.banking_api.banking_api.dtos.AccountDeleteDto;
+import com.banking_api.banking_api.dtos.AccountListDTO;
+import com.banking_api.banking_api.dtos.SelicDTO;
+import com.banking_api.banking_api.infra.exception.BadResponseException;
 import com.banking_api.banking_api.repository.AccountRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,11 +29,14 @@ public class AccountService {
     private final AccountRepository repository;
     private final DepositService depositService;
 
+    private final RestTemplate restTemplate;
+
     private final UserService userService;
 
-    public AccountService(AccountRepository repository, @Lazy DepositService depositService, UserService userService) {
+    public AccountService(AccountRepository repository, @Lazy DepositService depositService, RestTemplate restTemplate, UserService userService) {
         this.repository = repository;
         this.depositService = depositService;
+        this.restTemplate = restTemplate;
         this.userService = userService;
     }
 
@@ -56,7 +64,7 @@ public class AccountService {
         }
     }
 
-
+    
     public Page<AccountListDTO> getAllActiveAccounts(Pageable page) {
         var accounts = repository.findAllByActiveTrue(page);
         return accounts.map(a -> new AccountListDTO(a.getAccountNumber(), a.getType(), a.isActive(), a.getUser().getName()));
@@ -67,17 +75,16 @@ public class AccountService {
 
         return convertToAccountDTO(account);
     }
-
+@Cacheable("accountById")
     public Account findByAccountId(Long id) throws EntityNotFoundException {
+        return  repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Id da conta não enoontrado"));
 
-        var account = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Id da conta não enoontrado"));
-        return account;
     }
 
     private AccountDTO convertToAccountDTO(Account a) {
         return new AccountDTO(a.getAccountNumber(), a.getBalance(), a.getType(), a.getCreationDate(), a.getLastDepositDate(), a.isActive(), a.getUser().getId());
     }
-
+    @Cacheable("userById")
     public List<AccountDTO> findByUserId(Long userId) {
         var accountByUserId = repository.findByUserId(userId);
         return accountByUserId.stream()
@@ -92,36 +99,64 @@ public class AccountService {
 
     //Chama a cada 1 minuto
     // @Scheduled(cron = "0 * * ? * *")
-@Scheduled(cron = "0 0 0 * * ?")
-    public void earningsGenerate() {
-       var accounts = repository.findAccountsActiveAndPoupanca ();
-       if (accounts == null|| accounts.isEmpty()) { throw new EntityNotFoundException("Não há contas Poupança ativas com rendimentos pendentes"); }
-       else {
-           accounts.forEach(this::updateBalanceWithEarnings);
-       }
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void earningsGenerate()  {
+        var accounts = repository.findOptionalAccountsActiveAndPoupanca().orElseThrow(() -> new EntityNotFoundException("Conta não encontrada com o ID"));
+        accounts.forEach(account -> {
+            try {
+                updateBalanceWithEarnings(account);
+            } catch (BadResponseException e) {
+                throw new RuntimeException ("Erro no site do banco ao restornar a resposta");
+            }
+        });
 
-    }
+        }
 
 
 
-//Método extra pra poder usar o "reference method" no método "erningsGenerate()"
-    public void updateBalanceWithEarnings(Account account) {
+    public void updateBalanceWithEarnings(Account account) throws BadResponseException {
         BigDecimal newBalance = calculateBalancePlusEarnings(account);
         account.setBalance(newBalance);
         repository.save(account);
     }
 
 
-        private BigDecimal calculateBalancePlusEarnings(Account account) {
-            BigDecimal earningsAmount = new BigDecimal("0.01"); // Defina o valor dos ganhos aqui
-            BigDecimal oldBalance = account.getBalance();
-            BigDecimal increase = oldBalance.multiply(earningsAmount);
-            return oldBalance.add(increase);
-        }
+    private BigDecimal calculateBalancePlusEarnings(Account account) throws BadResponseException {
 
+        var value = getSelicDataValue();
+        BigDecimal earningsAmount = new BigDecimal("0.005").add(value);
+        BigDecimal oldBalance = account.getBalance();
+        BigDecimal increase = oldBalance.multiply(earningsAmount);
 
-
+        return oldBalance.add(increase);
     }
+
+@Cacheable("Selic")
+    public BigDecimal getSelicDataValue() throws BadResponseException {
+        var dataInicial = LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        var dataFinal = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
+        String url = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados?formato=json&dataInicial=" + dataInicial + "&dataFinal=" + dataFinal;
+
+        ResponseEntity<SelicDTO[]> response = restTemplate.getForEntity(url, SelicDTO[].class);
+        if(response.getStatusCode().is2xxSuccessful()) {
+
+            SelicDTO[] selicDTOArray = response.getBody();
+
+            var retorno = Arrays.stream(selicDTOArray)
+                    .map(SelicDTO::getValor)
+                    .collect(Collectors.toList());
+
+
+            return new BigDecimal(retorno.get(0));
+
+        } else throw new BadResponseException("A taxa SELIC nao pode ser calculado por mal funcionamento do site do banco");
+    }
+
+}
+
+
+
 
 
 

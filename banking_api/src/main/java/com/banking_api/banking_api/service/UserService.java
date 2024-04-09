@@ -5,6 +5,7 @@ import com.banking_api.banking_api.dtos.UserDto;
 import com.banking_api.banking_api.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -96,12 +97,12 @@ public class UserService {
     }
 
 
-
+    @Cacheable("ActiveUsers")
     public Page<List<UserDto>> findAllActiveUsers(Pageable pageable) {
       var page = userRepository.findAllByActiveTrue(pageable);
         return page.map(u-> Collections.singletonList(new UserDto(null, u.getName(), null, null, null,null, null, null, null)));
     }
-
+    @Cacheable("UserById")
     public User findUserById(Long id) throws EntityNotFoundException {
         return userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário com ID " + id + " não encontrado"));
