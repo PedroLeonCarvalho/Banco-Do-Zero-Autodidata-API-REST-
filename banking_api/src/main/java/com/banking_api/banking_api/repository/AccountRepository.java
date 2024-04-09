@@ -33,4 +33,13 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
                 DATEDIFF(CURRENT_DATE(), a.lastDepositDate) >= 30
             """)
     List<Account> findAccountsActiveAndPoupanca();
+
+    @Query("""
+                SELECT a FROM Account a 
+                WHERE a.active = true AND
+                a.type = 'POUPANCA' AND
+                DATEDIFF(CURRENT_DATE(), a.lastDepositDate) >= 30
+            """)
+    Optional<List<Account>> findOptionalAccountsActiveAndPoupanca();
+
 }

@@ -2,13 +2,16 @@ package com.banking_api.banking_api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 @EnableScheduling
-
+@EnableCaching
 public class   BankingApiApplication {
 
 	public static void main(String[] args) {
@@ -18,5 +21,6 @@ public class   BankingApiApplication {
 	public RestTemplate restTemplate() {
 		return new RestTemplate();
 	}
+
 
 }
