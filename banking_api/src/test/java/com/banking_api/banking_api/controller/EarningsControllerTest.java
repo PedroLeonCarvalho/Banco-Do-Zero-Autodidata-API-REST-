@@ -128,7 +128,7 @@ account.setLastDepositDate(LocalDateTime.now());
         // Then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
 
-        assertThat(response.getContentAsString()).isEqualTo("Não há contas Poupança ativas com rendimentos pendentes");
+        assertThat(response.getContentAsString()).isEqualTo("Conta não encontrada com o ID ou não há contas ativas e poupança disponíveis");
     }
     @Test
     @DisplayName("não há contas POUPANCA , lança 404")
@@ -149,7 +149,7 @@ account.setLastDepositDate(LocalDateTime.now());
         // Then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
 
-        assertThat(response.getContentAsString()).isEqualTo("Não há contas Poupança ativas com rendimentos pendentes");
+        assertThat(response.getContentAsString()).isEqualTo("Conta não encontrada com o ID ou não há contas ativas e poupança disponíveis");
     }
     @Test
     @DisplayName("não há contas ATIVAS , lança 404")
@@ -170,7 +170,7 @@ account.setLastDepositDate(LocalDateTime.now());
         // Then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
 
-        assertThat(response.getContentAsString()).isEqualTo("Não há contas Poupança ativas com rendimentos pendentes");
+        assertThat(response.getContentAsString()).isEqualTo("Conta não encontrada com o ID ou não há contas ativas e poupança disponíveis");
     }
 
 

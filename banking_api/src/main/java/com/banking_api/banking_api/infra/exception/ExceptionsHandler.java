@@ -42,7 +42,7 @@ public class ExceptionsHandler {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<?> badFunction (ApiException exception) {
+    public ResponseEntity<?> badFunction (RuntimeException exception) {
 
         var msg = exception.getMessage();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(msg);

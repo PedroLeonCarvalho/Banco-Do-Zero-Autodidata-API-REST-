@@ -6,6 +6,7 @@ import jakarta.validation.constraints.*;
 import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -37,7 +38,7 @@ public record UserDto(
         String username,
         @NotBlank(message = "password is mandatory")
         String password
-) {
+) implements Serializable {
 }
 
 

@@ -64,8 +64,8 @@ public class AccountService {
         }
     }
 
-    
-    public Page<AccountListDTO> getAllActiveAccounts(Pageable page) {
+    @Cacheable("accountActiveById")
+    public Page<AccountListDTO> getAllActiveAccounts(Pageable page){
         var accounts = repository.findAllByActiveTrue(page);
         return accounts.map(a -> new AccountListDTO(a.getAccountNumber(), a.getType(), a.isActive(), a.getUser().getName()));
     }
@@ -102,6 +102,9 @@ public class AccountService {
     @Scheduled(cron = "0 0 0 * * ?")
     public void earningsGenerate()  {
         var accounts = repository.findOptionalAccountsActiveAndPoupanca().orElseThrow(() -> new EntityNotFoundException("Conta não encontrada com o ID"));
+        if (accounts.isEmpty()) {
+            throw new EntityNotFoundException("Conta não encontrada com o ID ou não há contas ativas e poupança disponíveis");
+        } else {
         accounts.forEach(account -> {
             try {
                 updateBalanceWithEarnings(account);
@@ -110,7 +113,7 @@ public class AccountService {
             }
         });
 
-        }
+        } }
 
 
 
@@ -147,8 +150,7 @@ public class AccountService {
                     .map(SelicDTO::getValor)
                     .collect(Collectors.toList());
 
-
-            return new BigDecimal(retorno.get(0));
+            return retorno.get(0);
 
         } else throw new BadResponseException("A taxa SELIC nao pode ser calculado por mal funcionamento do site do banco");
     }

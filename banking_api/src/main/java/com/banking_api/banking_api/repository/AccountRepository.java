@@ -2,6 +2,7 @@ package com.banking_api.banking_api.repository;
 
 import com.banking_api.banking_api.domain.account.Account;
 import jakarta.transaction.Transactional;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
