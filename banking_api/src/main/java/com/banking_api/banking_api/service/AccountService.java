@@ -98,7 +98,7 @@ public class AccountService {
 
 
     // @Scheduled(cron = "0 * * ? * *")
-    @Scheduled(cron = "0 0 0 * * ?")
+
     public void earningsGenerate()  {
         var accounts = repository.findOptionalAccountsActiveAndPoupanca().orElseThrow(() -> new EntityNotFoundException("Conta não encontrada com o ID"));
         if (accounts.isEmpty()) {
