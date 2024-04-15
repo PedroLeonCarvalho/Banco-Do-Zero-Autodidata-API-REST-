@@ -97,12 +97,12 @@ public class UserService {
     }
 
 
-    @Cacheable("ActiveUsers")
+
     public Page<List<UserDto>> findAllActiveUsers(Pageable pageable) {
       var page = userRepository.findAllByActiveTrue(pageable);
         return page.map(u-> Collections.singletonList(new UserDto(null, u.getName(), null, null, null,null, null, null, null)));
     }
-    @Cacheable("UserById")
+   // @Cacheable("UserById")
     public User findUserById(Long id) throws EntityNotFoundException {
         return userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário com ID " + id + " não encontrado"));

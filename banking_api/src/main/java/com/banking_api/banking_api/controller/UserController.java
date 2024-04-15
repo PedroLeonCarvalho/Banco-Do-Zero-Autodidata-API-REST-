@@ -4,6 +4,9 @@ import com.banking_api.banking_api.domain.user.User;
 import com.banking_api.banking_api.dtos.UserDto;
 import com.banking_api.banking_api.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -28,18 +31,21 @@ public class UserController {
     }
 
     @PostMapping
+    @CachePut("UserList")
     public ResponseEntity<UserDto> createUser(@RequestBody  @Valid UserDto user) {
        var newUser = userService.createUser(user);
         return new ResponseEntity(newUser, HttpStatus.CREATED);
     }
 
     @PutMapping
+    @CachePut("UserList")
     public ResponseEntity<UserDto> updateUser(@RequestBody @Valid UserDto data) {
         UserDto user = userService.updateUser(data);
         return ResponseEntity.ok(user);
     }
 
     @DeleteMapping("/{id}")
+    @CacheEvict("UserList")
     public ResponseEntity<String> deactivateUser(@PathVariable Long id) {
         userService.deactivateUser(id);
         return ResponseEntity.noContent().build();
@@ -47,6 +53,7 @@ public class UserController {
     }
 
     @GetMapping
+    @Cacheable("UserList")
     public ResponseEntity<Page<List<UserDto>>> list(@PageableDefault(size = 10) Pageable pageable) {
         Page<List<UserDto>> page = userService.findAllActiveUsers(pageable);
         return ResponseEntity.ok(page);

@@ -63,7 +63,7 @@ public class AccountService {
         }
     }
 
-    @Cacheable("accountActiveById")
+
     public Page<AccountListDTO> getAllActiveAccounts(Pageable page){
         var accounts = repository.findAllByActiveTrue(page);
         return accounts.map(a -> new AccountListDTO(a.getAccountNumber(), a.getType(), a.isActive(), a.getUser().getName()));
@@ -74,7 +74,7 @@ public class AccountService {
 
         return convertToAccountDTO(account);
     }
-@Cacheable("accountById")
+
     public Account findByAccountId(Long id) throws EntityNotFoundException {
         return  repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Id da conta não enoontrado"));
 
@@ -83,7 +83,7 @@ public class AccountService {
     private AccountDTO convertToAccountDTO(Account a) {
         return new AccountDTO(a.getAccountNumber(), a.getBalance(), a.getType(), a.getCreationDate(), a.getLastDepositDate(), a.isActive(), a.getUser().getId());
     }
-    @Cacheable("userById")
+
     public List<AccountDTO> findByUserId(Long userId) {
         var accountByUserId = repository.findByUserId(userId);
         return accountByUserId.stream()
@@ -96,7 +96,7 @@ public class AccountService {
         repository.save(account);
     }
 
-    //Chama a cada 1 minuto
+
     // @Scheduled(cron = "0 * * ? * *")
     @Scheduled(cron = "0 0 0 * * ?")
     public void earningsGenerate()  {
@@ -133,7 +133,7 @@ public class AccountService {
         return oldBalance.add(increase);
     }
 
-@Cacheable("Selic")
+    @Cacheable("taxaSelic")
     public BigDecimal getSelicDataValue() throws BadResponseException {
         var dataInicial = LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         var dataFinal = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
