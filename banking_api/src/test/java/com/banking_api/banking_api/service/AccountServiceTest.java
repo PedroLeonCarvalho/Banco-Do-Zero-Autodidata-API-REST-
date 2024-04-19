@@ -147,18 +147,18 @@ class AccountServiceTest {
 
     @Test
     void delete_200OK() {
-        AccountDeleteDto dto = new AccountDeleteDto(account.getId());
+        var id = account.getId();
         when(repository.existsById(any())).thenReturn(true);
-        accountService.delete(dto);
-        verify(repository, times(1)).existsById(dto.id());
-        verify(repository, times(1)).deactivateAccountById(dto.id());
+        accountService.delete(id);
+        verify(repository, times(1)).existsById(id);
+        verify(repository, times(1)).deactivateAccountById(id);
 
     }
     @Test
     void whenDelete_thenEntityNotFoundException() {
-        AccountDeleteDto dto = new AccountDeleteDto(account.getId());
+        var id = account.getId();
         when(repository.existsById(any())).thenReturn(false);
-        assertThrows(EntityNotFoundException.class, () -> {accountService.delete(dto);},"Conta não existe");
+        assertThrows(EntityNotFoundException.class, () -> {accountService.delete(id);},"Conta não existe");
     }
 
 

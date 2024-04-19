@@ -40,7 +40,7 @@ public class AuthenticationController {
     }
 
     @GetMapping
-    public ResponseEntity login2(@RequestBody LoginDTO dto) {
+    public ResponseEntity login2(@RequestParam LoginDTO dto) {
 
         var token = new UsernamePasswordAuthenticationToken(dto.username(), dto.password());
         var authentication = authenticationManager.authenticate(token);

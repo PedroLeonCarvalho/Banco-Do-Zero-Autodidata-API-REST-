@@ -60,11 +60,11 @@ public class AccountService {
 
 @Transactional
 @CacheEvict(value="accountsList")
-    public void delete(AccountDeleteDto id) throws EntityNotFoundException {
-        if (!repository.existsById(id.id())) {
+    public void delete(Long id) throws EntityNotFoundException {
+        if (!repository.existsById(id)) {
             throw new EntityNotFoundException("Conta não existe");
         } else {
-            repository.deactivateAccountById(id.id());
+            repository.deactivateAccountById(id);
         }
     }
 

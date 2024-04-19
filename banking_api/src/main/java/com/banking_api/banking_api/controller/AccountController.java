@@ -40,8 +40,8 @@ public class AccountController {
         return new ResponseEntity<>(account, HttpStatus.CREATED);
     }
 
-    @DeleteMapping
-    public ResponseEntity deactivate(@RequestBody @Valid AccountDeleteDto id) throws EntityNotFoundException {
+    @DeleteMapping("/{id}")
+    public ResponseEntity deactivate(@PathVariable @Valid Long id) throws EntityNotFoundException {
         accountService.delete(id);
         return ResponseEntity.noContent().build();
     }
