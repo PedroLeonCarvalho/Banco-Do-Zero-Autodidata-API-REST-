@@ -8,13 +8,17 @@ import com.banking_api.banking_api.dtos.SelicDTO;
 import com.banking_api.banking_api.infra.exception.BadResponseException;
 import com.banking_api.banking_api.repository.AccountRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -38,23 +42,24 @@ public class AccountService {
         this.restTemplate = restTemplate;
         this.userService = userService;
     }
-
-    public Account createAccount(AccountDTO dto) throws EntityNotFoundException {
+    @CachePut(value="accountsList")
+    public AccountDTO createAccount(AccountDTO dto) throws EntityNotFoundException {
 
         Account account = new Account();
         account.setAccountNumber(dto.accountNumber());
         account.setBalance(BigDecimal.ZERO);
-        account.setCreationDate(LocalDate.now());
+        account.setCreationDate(dto.creationDate());
         account.setType(dto.type());
         account.setActive(true);
         account.setUser(userService.findUserById(dto.user()));
-        account.setLastDepositDate(depositService.getLastDepositDate());
-
+        account.setLastDepositDate(null);
         repository.save(account);
-        return account;
+
+        return convertToAccountDTO(account);
     }
 
-
+@Transactional
+@CacheEvict(value="accountsList")
     public void delete(AccountDeleteDto id) throws EntityNotFoundException {
         if (!repository.existsById(id.id())) {
             throw new EntityNotFoundException("Conta não existe");
@@ -67,6 +72,11 @@ public class AccountService {
     public Page<AccountListDTO> getAllActiveAccounts(Pageable page){
         var accounts = repository.findAllByActiveTrue(page);
         return accounts.map(a -> new AccountListDTO(a.getAccountNumber(), a.getType(), a.isActive(), a.getUser().getName()));
+    }
+
+    @Cacheable(value= "accountsList", key = "#page")
+    public Page<AccountListDTO> cacheList (@PageableDefault(size = 10) Pageable page) {
+        return getAllActiveAccounts(page);
     }
 
     public AccountDTO findById(Long id) throws EntityNotFoundException {
@@ -95,9 +105,6 @@ public class AccountService {
     public void save(Account account) {
         repository.save(account);
     }
-
-
-    // @Scheduled(cron = "0 * * ? * *")
 
     public void earningsGenerate()  {
         var accounts = repository.findOptionalAccountsActiveAndPoupanca().orElseThrow(() -> new EntityNotFoundException("Conta não encontrada com o ID"));
@@ -133,7 +140,7 @@ public class AccountService {
         return oldBalance.add(increase);
     }
 
-    @Cacheable("taxaSelic")
+  @Cacheable("taxaSelic")
     public BigDecimal getSelicDataValue() throws BadResponseException {
         var dataInicial = LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         var dataFinal = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));

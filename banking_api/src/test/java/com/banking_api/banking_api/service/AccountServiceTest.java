@@ -139,9 +139,10 @@ class AccountServiceTest {
 
     @Test
     void whenCreateAccount_then202Created() {
-        AccountDTO dto = new AccountDTO("12345678902", new BigDecimal("1000.00"), AccountType.POUPANCA, LocalDate.now(), LocalDateTime.of(2023, 3, 17, 12, 0), true, 567L);
+        AccountDTO dto = new AccountDTO("12345678902", new BigDecimal("1000.00"), AccountType.POUPANCA, LocalDate.now(), LocalDateTime.of(2023, 3, 17, 12, 0), true, 1L);
+        when(userService.findUserById(any())).thenReturn(new User());
         accountService.createAccount(dto);
-        verify(repository, times(2)).save(account);
+         verify(repository, times(2)).save(account);
     }
 
     @Test

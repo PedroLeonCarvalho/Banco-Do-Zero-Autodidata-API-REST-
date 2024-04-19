@@ -35,23 +35,21 @@ public class AccountController {
     }
 
     @PostMapping
-    @CachePut(value="accountsList")
-    public ResponseEntity<Account> createAccount(@RequestBody @Valid AccountDTO dto) throws EntityNotFoundException {
+    public ResponseEntity<AccountDTO> createAccount(@RequestBody @Valid AccountDTO dto) throws EntityNotFoundException {
         var account = accountService.createAccount(dto);
         return new ResponseEntity<>(account, HttpStatus.CREATED);
     }
 
     @DeleteMapping
-    @CacheEvict(value="accountsList")
     public ResponseEntity deactivate(@RequestBody @Valid AccountDeleteDto id) throws EntityNotFoundException {
         accountService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
+
     @GetMapping
-    @Cacheable("accountsList")
     public ResponseEntity<Page<AccountListDTO>> list(@PageableDefault(size = 10) Pageable page) {
-        var accounts = accountService.getAllActiveAccounts(page);
+        var accounts = accountService.cacheList(page); // Chama o método cacheList() explicitamente para armazenar o resultado em cache
         return ResponseEntity.ok(accounts);
     }
 
@@ -61,8 +59,8 @@ public class AccountController {
         return ResponseEntity.ok(account);
     }
 
-    @GetMapping("/by-user")
-    public ResponseEntity<List<AccountDTO>> findAccountByUserId(@RequestParam Long userId) throws EntityNotFoundException {
+    @GetMapping("/by-user/{userId}")
+    public ResponseEntity<List<AccountDTO>> findAccountByUserId(@PathVariable Long userId) throws EntityNotFoundException {
         var account = accountService.findByUserId(userId);
         return ResponseEntity.ok(account);
     }
