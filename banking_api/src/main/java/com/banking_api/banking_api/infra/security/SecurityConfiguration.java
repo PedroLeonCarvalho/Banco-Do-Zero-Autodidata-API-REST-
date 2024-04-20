@@ -31,10 +31,13 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST, "/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/login**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/users").permitAll()
-                        .requestMatchers( HttpMethod.GET,
+                        .requestMatchers(HttpMethod.GET,
                                 "/api-docs",
-                                        "/api-docs.yaml",
-                                        "/swagger-ui/index.html").permitAll()
+                                "/api-docs/**",
+                                "/api-docs.yaml",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/swagger-ui/index.html").permitAll()
                         .anyRequest().authenticated()
                         .and()
                         .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class))
