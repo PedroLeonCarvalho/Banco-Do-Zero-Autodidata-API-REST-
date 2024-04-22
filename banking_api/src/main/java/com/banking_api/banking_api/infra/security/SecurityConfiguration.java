@@ -37,7 +37,12 @@ public class SecurityConfiguration {
                                 "/api-docs.yaml",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
-                                "/swagger-ui/index.html").permitAll()
+                                "/swagger-ui/index.html",
+                                        "/swagger-resources/**",
+                                "configuration/**",
+                                "webjars/**").permitAll()
+
+
                         .anyRequest().authenticated()
                         .and()
                         .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class))

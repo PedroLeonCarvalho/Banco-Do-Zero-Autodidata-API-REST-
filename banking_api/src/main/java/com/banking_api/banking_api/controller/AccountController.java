@@ -5,6 +5,7 @@ import com.banking_api.banking_api.dtos.AccountDTO;
 import com.banking_api.banking_api.dtos.AccountDeleteDto;
 import com.banking_api.banking_api.dtos.AccountListDTO;
 import com.banking_api.banking_api.service.AccountService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.cache.annotation.CacheEvict;
@@ -20,7 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@SecurityRequirement(name = "Authorization")
 @RestController
 @RequestMapping("/accounts")
 public class AccountController {

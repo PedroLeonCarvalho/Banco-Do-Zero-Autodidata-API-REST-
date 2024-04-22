@@ -3,6 +3,7 @@ package com.banking_api.banking_api.controller;
 import com.banking_api.banking_api.domain.user.User;
 import com.banking_api.banking_api.dtos.UserDto;
 import com.banking_api.banking_api.service.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+@SecurityRequirement(name = "Authorization")
 @RestController
 @RequestMapping("/users")
 public class UserController {
