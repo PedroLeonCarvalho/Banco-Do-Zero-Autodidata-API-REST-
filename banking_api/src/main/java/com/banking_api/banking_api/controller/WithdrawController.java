@@ -4,6 +4,7 @@ import com.banking_api.banking_api.domain.transactions.deposit.Deposit;
 import com.banking_api.banking_api.domain.transactions.withdraw.Withdraw;
 import com.banking_api.banking_api.dtos.DepositDTO;
 import com.banking_api.banking_api.dtos.WithdrawDTO;
+import com.banking_api.banking_api.dtos.WithdrawResponseDTO;
 import com.banking_api.banking_api.infra.exception.InsufficientBalanceException;
 import com.banking_api.banking_api.infra.exception.UnauthorizedUserException;
 import com.banking_api.banking_api.service.DepositService;
@@ -29,9 +30,8 @@ public class WithdrawController {
     }
 
     @PostMapping
-    public ResponseEntity<WithdrawDTO> toWithdraw (@RequestBody @Valid WithdrawDTO dto,
-                                                   Authentication auth) throws EntityNotFoundException, InsufficientBalanceException, UnauthorizedUserException {
-
+    public ResponseEntity<WithdrawResponseDTO> toWithdraw (@RequestBody @Valid WithdrawDTO dto,
+                                                           Authentication auth) throws EntityNotFoundException, InsufficientBalanceException, UnauthorizedUserException {
     var username = auth.getName();
         var newWithdraw = withdrawService.withdraw(dto, username);
         return ResponseEntity.ok(newWithdraw);

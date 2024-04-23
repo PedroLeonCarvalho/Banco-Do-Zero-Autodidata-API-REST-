@@ -25,7 +25,7 @@ public class AuthenticationController {
     @PostMapping
     public ResponseEntity login(@RequestBody LoginDTO dto) {
 
-        var token = new UsernamePasswordAuthenticationToken( dto.username(), dto.password());
+        var token = new UsernamePasswordAuthenticationToken(dto.username(), dto.password());
         var authentication = authenticationManager.authenticate(token);
         var tokenJWT = tokenService.tokenGenerate((User) authentication.getPrincipal());
 
@@ -33,12 +33,21 @@ public class AuthenticationController {
     }
 
     @PostMapping("/refresh")
-    public  ResponseEntity<TokenDTO> refreshToken (@RequestBody String tokenJWT){
+    public ResponseEntity<TokenDTO> refreshToken(@RequestBody String tokenJWT) {
 
         var newTokenJWT = tokenService.refreshToken(tokenJWT);
         return ResponseEntity.ok(new TokenDTO(newTokenJWT));
     }
 
+    @GetMapping
+    public ResponseEntity login2(@RequestParam LoginDTO dto) {
+
+        var token = new UsernamePasswordAuthenticationToken(dto.username(), dto.password());
+        var authentication = authenticationManager.authenticate(token);
+        var tokenJWT = tokenService.tokenGenerate((User) authentication.getPrincipal());
+
+        return ResponseEntity.ok(new TokenDTO(tokenJWT));
 
 
+    }
 }

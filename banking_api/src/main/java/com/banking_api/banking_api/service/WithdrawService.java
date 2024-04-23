@@ -4,6 +4,7 @@ import com.banking_api.banking_api.domain.transactions.deposit.Deposit;
 import com.banking_api.banking_api.domain.transactions.withdraw.Withdraw;
 import com.banking_api.banking_api.dtos.DepositDTO;
 import com.banking_api.banking_api.dtos.WithdrawDTO;
+import com.banking_api.banking_api.dtos.WithdrawResponseDTO;
 import com.banking_api.banking_api.infra.exception.InsufficientBalanceException;
 import com.banking_api.banking_api.infra.exception.UnauthorizedUserException;
 import com.banking_api.banking_api.repository.DepositRepository;
@@ -28,7 +29,7 @@ public class WithdrawService {
 
 
     @Transactional
-    public WithdrawDTO withdraw (WithdrawDTO dto, String username) throws EntityNotFoundException, InsufficientBalanceException, UnauthorizedUserException {
+    public WithdrawResponseDTO withdraw (WithdrawDTO dto, String username) throws EntityNotFoundException, InsufficientBalanceException, UnauthorizedUserException {
         var account = accountService.findByAccountId(dto.getAccountId());
         var value = dto.getValue();
 
@@ -54,7 +55,7 @@ public class WithdrawService {
 
 
 
-        return  WithdrawDTO.builder().timestamp(newWithdraw.getTimestamp().truncatedTo(ChronoUnit.MINUTES)).newBalance(newBalance).build();
+        return  WithdrawResponseDTO.builder().timestamp(newWithdraw.getTimestamp().truncatedTo(ChronoUnit.MINUTES)).newBalance(newBalance).build();
     }
 
 

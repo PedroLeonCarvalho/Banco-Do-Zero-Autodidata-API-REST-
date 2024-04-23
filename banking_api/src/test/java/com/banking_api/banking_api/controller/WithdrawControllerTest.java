@@ -5,6 +5,7 @@ import com.banking_api.banking_api.domain.account.AccountType;
 import com.banking_api.banking_api.domain.account.Earnings;
 import com.banking_api.banking_api.domain.user.User;
 import com.banking_api.banking_api.dtos.WithdrawDTO;
+import com.banking_api.banking_api.dtos.WithdrawResponseDTO;
 import com.banking_api.banking_api.repository.AccountRepository;
 import com.banking_api.banking_api.repository.UserRepository;
 import com.banking_api.banking_api.repository.WithdrawRepository;
@@ -50,7 +51,9 @@ class WithdrawControllerTest {
     private MockMvc mvc;
 
     @Autowired
-    private JacksonTester<WithdrawDTO> jacksonTester;
+    private JacksonTester<WithdrawResponseDTO> jacksonTesterResponse;
+    @Autowired
+    private JacksonTester<WithdrawDTO> jacksonTesterEntrance;
     @Autowired
     private AccountRepository accountRepository;
     @Autowired
@@ -99,11 +102,11 @@ class WithdrawControllerTest {
     void testWithdrawEndpoint() throws Exception {
         // Given
 
-        var accountId = account.getId();
+         var accountId = account.getId();
         var value = new BigDecimal(100);
         var accountNewBalance = account.getBalance().subtract(value);
 
-        WithdrawDTO responseDTO = WithdrawDTO.builder()
+        WithdrawResponseDTO responseDTO = WithdrawResponseDTO.builder()
                 .timestamp(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES))
                 .newBalance(accountNewBalance)
                 .build();
@@ -117,9 +120,8 @@ class WithdrawControllerTest {
                 //Acrescenta o usuário logado
                         .with(postProcessor)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jacksonTester.write(
+                .content(jacksonTesterEntrance.write(
                                 WithdrawDTO.builder()
-                                        .id(1L)
                                         .accountId(accountId)
                                         .value(value).build())
                         .getJson())
@@ -129,7 +131,7 @@ class WithdrawControllerTest {
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
 
 
-        var jsonExpected = jacksonTester.write(
+        var jsonExpected = jacksonTesterResponse.write(
                         responseDTO)
                 .getJson();
 
@@ -152,8 +154,11 @@ class WithdrawControllerTest {
         var response = mvc.perform(post("/withdraw")
                 .with(postProcessor)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jacksonTester.write(
-                                 WithdrawDTO.builder().id(1L).accountId(accountId).value(value).build())
+                .content(jacksonTesterEntrance.write(
+                                 WithdrawDTO.builder()
+                                         .accountId(accountId)
+                                         .value(value)
+                                         .build())
                         .getJson())
         ).andReturn().getResponse();
 

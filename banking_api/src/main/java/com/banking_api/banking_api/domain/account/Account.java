@@ -4,6 +4,7 @@ import com.banking_api.banking_api.domain.user.User;
 import com.banking_api.banking_api.dtos.AccountDTO;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.redis.core.RedisHash;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -18,6 +19,8 @@ import java.util.Date;
 @Entity
 @EqualsAndHashCode
 @ToString
+
+
 
 public class Account implements Serializable {
     @Id

@@ -7,6 +7,9 @@ import com.banking_api.banking_api.dtos.AccountListDTO;
 import com.banking_api.banking_api.service.AccountService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -32,20 +35,21 @@ public class AccountController {
     }
 
     @PostMapping
-    public ResponseEntity<Account> createAccount(@RequestBody @Valid AccountDTO dto) throws EntityNotFoundException {
+    public ResponseEntity<AccountDTO> createAccount(@RequestBody @Valid AccountDTO dto) throws EntityNotFoundException {
         var account = accountService.createAccount(dto);
         return new ResponseEntity<>(account, HttpStatus.CREATED);
     }
 
-    @DeleteMapping
-    public ResponseEntity deactivate(@RequestBody @Valid AccountDeleteDto id) throws EntityNotFoundException {
+    @DeleteMapping("/{id}")
+    public ResponseEntity deactivate(@PathVariable @Valid Long id) throws EntityNotFoundException {
         accountService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
+
     @GetMapping
     public ResponseEntity<Page<AccountListDTO>> list(@PageableDefault(size = 10) Pageable page) {
-        var accounts = accountService.getAllActiveAccounts(page);
+        var accounts = accountService.cacheList(page); // Chama o método cacheList() explicitamente para armazenar o resultado em cache
         return ResponseEntity.ok(accounts);
     }
 
@@ -55,8 +59,8 @@ public class AccountController {
         return ResponseEntity.ok(account);
     }
 
-    @GetMapping("/by-user")
-    public ResponseEntity<List<AccountDTO>> findAccountByUserId(@RequestParam Long userId) throws EntityNotFoundException {
+    @GetMapping("/by-user/{userId}")
+    public ResponseEntity<List<AccountDTO>> findAccountByUserId(@PathVariable Long userId) throws EntityNotFoundException {
         var account = accountService.findByUserId(userId);
         return ResponseEntity.ok(account);
     }

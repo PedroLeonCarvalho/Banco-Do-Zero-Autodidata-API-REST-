@@ -4,6 +4,7 @@ import com.banking_api.banking_api.domain.account.Account;
 import com.banking_api.banking_api.domain.transactions.withdraw.Withdraw;
 import com.banking_api.banking_api.domain.user.User;
 import com.banking_api.banking_api.dtos.WithdrawDTO;
+import com.banking_api.banking_api.dtos.WithdrawResponseDTO;
 import com.banking_api.banking_api.infra.exception.InsufficientBalanceException;
 import com.banking_api.banking_api.infra.exception.UnauthorizedUserException;
 import com.banking_api.banking_api.repository.WithdrawRepository;
@@ -39,14 +40,12 @@ class WithdrawServiceTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
 
+
         validWithdrawDto = WithdrawDTO.builder()
-                .id(1L)
                 .accountId(1L)
                 .value(new BigDecimal(25))
-                .timestamp(LocalDateTime.now())
-                .account(1L)
-                .newBalance(BigDecimal.ZERO)
                 .build();
+
 
         validAccount = new Account();
         validAccount.setId(1L);
@@ -61,7 +60,7 @@ class WithdrawServiceTest {
         when(accountService.findByAccountId(validWithdrawDto.getAccountId())).thenReturn(validAccount);
 
         // Act
-        WithdrawDTO result = withdrawService.withdraw(validWithdrawDto, "username");
+        WithdrawResponseDTO result = withdrawService.withdraw(validWithdrawDto, "username");
 
         // Assert
         assertNotNull(result);
