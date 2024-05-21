@@ -32,42 +32,22 @@ public class UserService {
 
         return convertToDto(newUser);
     }
+
+
     @CachePut("UserList")
     public UserDto updateUser(UserDto data) {
 
         User user = userRepository.getReferenceById(data.id());
 
-        if (data.name() != null) {
             user.setName(data.name());
-        }
-
-        if (data.email() != null) {
             user.setEmail(data.email());
-        }
-
-        if (data.cpf() != null) {
             user.setCpf(data.cpf());
-        }
-
-        if (data.birthDate() != null) {
             user.setBirthDate(data.birthDate());
-        }
-
-        if (data.age() != 0) {
             user.setAge(data.age());
-        }
-
-        if (data.city() != null) {
             user.setCity(data.city());
-        }
-
-        if (data.username() != null) {
             user.setUsername(data.username());
-        }
-
-        if (data.password() != null) {
             user.setPassword(data.password());
-        }
+
 
         User updatedUser = userRepository.save(user);
         var userDtoUpdated = convertToDto(updatedUser);
