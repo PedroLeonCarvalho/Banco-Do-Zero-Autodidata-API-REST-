@@ -2,9 +2,7 @@ package com.banking_api.banking_api.service;
 
 import com.banking_api.banking_api.domain.account.Account;
 import com.banking_api.banking_api.dtos.AccountDTO;
-import com.banking_api.banking_api.dtos.AccountDeleteDto;
 import com.banking_api.banking_api.dtos.AccountListDTO;
-import com.banking_api.banking_api.dtos.SelicDTO;
 import com.banking_api.banking_api.infra.exception.BadResponseException;
 import com.banking_api.banking_api.repository.AccountRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -15,15 +13,10 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,15 +24,15 @@ import java.util.stream.Collectors;
 public class AccountService {
     private final AccountRepository repository;
     private final DepositService depositService;
+    private final  AccountTypeFactory accountTypeFactory;
 
-    private final RestTemplate restTemplate;
 
     private final UserService userService;
 
-    public AccountService(AccountRepository repository, @Lazy DepositService depositService, RestTemplate restTemplate, UserService userService) {
+    public AccountService(AccountRepository repository, @Lazy DepositService depositService, AccountTypeFactory accountTypeFactory, UserService userService) {
         this.repository = repository;
         this.depositService = depositService;
-        this.restTemplate = restTemplate;
+        this.accountTypeFactory = accountTypeFactory;
         this.userService = userService;
     }
     @CachePut(value="accountsList")
@@ -131,8 +124,9 @@ public class AccountService {
 
 
     private BigDecimal calculateBalancePlusEarnings(Account account) throws BadResponseException {
-
-        var value = getSelicDataValue();
+        var accType = account.getType();
+        var value = accountTypeFactory.strategyMake(accType).getSelicDataValue(accType);
+       // var value = getSelicDataValue();
         BigDecimal earningsAmount = new BigDecimal("0.005").add(value);
         BigDecimal oldBalance = account.getBalance();
         BigDecimal increase = oldBalance.multiply(earningsAmount);
@@ -140,26 +134,6 @@ public class AccountService {
         return oldBalance.add(increase);
     }
 
-  @Cacheable("taxaSelic")
-    public BigDecimal getSelicDataValue() throws BadResponseException {
-        var dataInicial = LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        var dataFinal = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-
-        String url = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados?formato=json&dataInicial=" + dataInicial + "&dataFinal=" + dataFinal;
-
-        ResponseEntity<SelicDTO[]> response = restTemplate.getForEntity(url, SelicDTO[].class);
-        if(response.getStatusCode().is2xxSuccessful()) {
-
-            SelicDTO[] selicDTOArray = response.getBody();
-
-            var retorno = Arrays.stream(selicDTOArray)
-                    .map(SelicDTO::getValor)
-                    .collect(Collectors.toList());
-
-            return retorno.get(0);
-
-        } else throw new BadResponseException("A taxa SELIC nao pode ser calculado por mal funcionamento do site do banco");
-    }
 
 }
 

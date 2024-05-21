@@ -1,16 +1,15 @@
 package com.banking_api.banking_api.domain.account;
 
 import com.banking_api.banking_api.domain.user.User;
-import com.banking_api.banking_api.dtos.AccountDTO;
+import com.banking_api.banking_api.infra.exception.BadResponseException;
+import com.banking_api.banking_api.service.IEarningsRateStrategy;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.redis.core.RedisHash;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -53,4 +52,6 @@ public class Account implements Serializable {
     public Account(Long aLong) {
         this.id = id;
     }
+
+
 }

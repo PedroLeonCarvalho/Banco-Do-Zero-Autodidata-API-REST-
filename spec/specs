@@ -1,0 +1,20 @@
+Cria +1 tipo de conta: premium
+
+     > crio uma mais uma opção pro atributo type > ENUM > PREMIUM
+
+Criar 1 interface com o método que faz o cálculo de quanto rendeu
+
+   > Interface que obrigado implementação do método "chamaRendimentos" da camada service.
+
+
+Cria 2 implementaçoes diferentes pra fazer o cálculo, uma pra cada tipo de conta(aqui vai estar aplicando o padrão strategy)
+
+  > chama o endpoint > confere se a conta é Premium ou Normal
+
+  > crio  classe ServiceAccountNormalGeraRendimentos implements Interface
+  > crio ServiceAccountPremiumGeraRendimentos implements interface
+
+
+
+
+Cria 1 classe com método factory que recebe o tipo de conta como parâmetro, e retorna a implementação adequada da interface q vc criou
