@@ -5,6 +5,7 @@ import com.banking_api.banking_api.dtos.DepositDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.data.redis.core.RedisHash;
 
 
 import java.math.BigDecimal;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 @Entity
 @Setter
 @Getter
-
+@Table(name = "deposits")
 public class Deposit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

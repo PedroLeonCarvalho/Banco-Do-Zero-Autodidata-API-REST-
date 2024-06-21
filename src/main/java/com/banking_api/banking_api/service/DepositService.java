@@ -1,32 +1,33 @@
 package com.banking_api.banking_api.service;
 
-import com.banking_api.banking_api.domain.account.Account;
 import com.banking_api.banking_api.domain.transactions.deposit.Deposit;
 import com.banking_api.banking_api.dtos.DepositDTO;
 import com.banking_api.banking_api.repository.DepositRepository;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Service
 public class DepositService {
 
     private final DepositRepository repository;
     private final AccountService accountService;
+    private final EmailService emailService;
 
-    public DepositService(DepositRepository repository, AccountService accountService) {
+
+    public DepositService(DepositRepository repository, AccountService accountService, EmailService emailService) {
         this.repository = repository;
         this.accountService = accountService;
+
+        this.emailService = emailService;
     }
 
     @Transactional
-    public DepositDTO deposit(DepositDTO dto) throws EntityNotFoundException {
+    public DepositDTO deposit (DepositDTO dto) throws EntityNotFoundException {
+
         var account = accountService.findByAccountId(dto.getAccountId());
         if (account == null) { throw  new EntityNotFoundException("Conta não localizada");}
         else {
@@ -36,13 +37,15 @@ public class DepositService {
         var newBalance = account.getBalance().add(value);
         account.setBalance(newBalance);
         accountService.save(account);
-
         Deposit newDeposit = new Deposit();
         newDeposit.setValue(value);
         newDeposit.setTimestamp(LocalDateTime.now());
         newDeposit.setAccount(account);
-
         repository.save(newDeposit);
+        emailService.sendEmail(value, newDeposit.getTimestamp());
+
+
+
         return DepositDTO.builder().value(value).newBalance(newBalance).build();
         }
     }

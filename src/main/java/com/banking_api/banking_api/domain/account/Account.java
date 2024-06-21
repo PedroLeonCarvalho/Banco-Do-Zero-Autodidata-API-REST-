@@ -6,6 +6,7 @@ import com.banking_api.banking_api.service.IEarningsRateStrategy;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.data.redis.core.RedisHash;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

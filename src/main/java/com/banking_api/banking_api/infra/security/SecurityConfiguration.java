@@ -38,17 +38,14 @@ public class SecurityConfiguration {
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/swagger-ui/index.html",
-                                        "/swagger-resources/**",
+                                "/swagger-resources/**",
                                 "configuration/**",
                                 "webjars/**").permitAll()
-
 
                         .anyRequest().authenticated()
                         .and()
                         .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class))
                 .build();
-
-
     }
 
     @Bean
@@ -60,5 +57,6 @@ public class SecurityConfiguration {
     public PasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
     }
+
 }
 

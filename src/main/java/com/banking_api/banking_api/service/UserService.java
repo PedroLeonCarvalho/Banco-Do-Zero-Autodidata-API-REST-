@@ -5,11 +5,13 @@ import com.banking_api.banking_api.dtos.UserDto;
 import com.banking_api.banking_api.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,17 +21,21 @@ import java.util.List;
 @Service
 public class UserService {
 
+    private final PasswordEncoder passwordEncoder;
+
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
+    @Autowired
+    public UserService(PasswordEncoder passwordEncoder, UserRepository userRepository) {
+        this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
 
     }
-    @CachePut("UserList")
+  @CachePut("UserList")
     public UserDto createUser(UserDto data) {
         User newUser = new User(data);
+        newUser.setPassword(passwordEncoder.encode(data.password()));
         userRepository.save(newUser);
-
         return convertToDto(newUser);
     }
 

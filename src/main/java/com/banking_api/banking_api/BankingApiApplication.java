@@ -15,6 +15,7 @@ public class   BankingApiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(BankingApiApplication.class, args);
 	}
+
 	@Bean
 	public RestTemplate restTemplate() {
 		return new RestTemplate();

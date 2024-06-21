@@ -20,7 +20,6 @@ public class DepositController {
     private final DepositService depositService;
 
     public DepositController(DepositService depositService) {
-
         this.depositService = depositService;
     }
 

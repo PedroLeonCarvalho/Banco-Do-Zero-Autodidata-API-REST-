@@ -3,6 +3,7 @@ package com.banking_api.banking_api.dtos;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
 import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 
