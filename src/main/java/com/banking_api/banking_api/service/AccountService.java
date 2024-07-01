@@ -130,7 +130,8 @@ public class AccountService {
         BigDecimal earningsAmount = new BigDecimal("0.005").add(value);
         BigDecimal oldBalance = account.getBalance();
         BigDecimal increase = oldBalance.multiply(earningsAmount);
-        return oldBalance.add(increase);
+        return oldBalance.add(increase);\
+        teste de git
     }
 }
 
