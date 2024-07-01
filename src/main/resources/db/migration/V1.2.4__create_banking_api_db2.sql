@@ -1,0 +1,3 @@
+
+CREATE DATABASE IF NOT EXISTS banking_api_db2;
+
