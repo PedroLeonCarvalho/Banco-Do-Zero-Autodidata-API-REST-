@@ -12,14 +12,14 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 @OpenAPIDefinition(
         info = @Info(
                 contact = @Contact(
-                        name = "Pedro",
-                        email = "pedro@g.com"
+                        name = "Pedro Leon",
+                        email = "pedrolbbcarvalho@gmail.com"
                 ),
-                title = "Banking Api",
+                title = "Portifolio Spring Rest Banking Api from Scratch / do zero",
                 description = "Banking APIS REST aplication provides basic transactions and integrates with external banking api",
                 version = "1.0",
-                license = @License(name = "License name",
-                        url = "http://someurl.com"),
+                license = @License(name = "Licence (Linkedin)",
+                        url = "https://www.linkedin.com/in/pedro-leon-carvalho/"),
                 termsOfService = "Terms of service"
         )
 )

@@ -9,7 +9,9 @@ import com.banking_api.banking_api.infra.exception.InsufficientBalanceException;
 import com.banking_api.banking_api.infra.exception.UnauthorizedUserException;
 import com.banking_api.banking_api.service.DepositService;
 import com.banking_api.banking_api.service.WithdrawService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 @SecurityRequirement(name = "Authorization")
 @RestController
 @RequestMapping("/withdraw")
+@Tag(name = "Withdrawl value/ Saca valor ", description = "Withdrawl value from your account only")
+
 public class WithdrawController {
 
     private final WithdrawService withdrawService;
@@ -31,6 +35,8 @@ public class WithdrawController {
     }
 
     @PostMapping
+    @Operation(summary = "to withdrawl/ sacar valor", description = " Must be logged / precisa estar logado")
+
     public ResponseEntity<WithdrawResponseDTO> toWithdraw (@RequestBody @Valid WithdrawDTO dto,
                                                            Authentication auth) throws EntityNotFoundException, InsufficientBalanceException, UnauthorizedUserException {
     var username = auth.getName();

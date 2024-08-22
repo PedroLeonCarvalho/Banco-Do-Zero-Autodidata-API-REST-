@@ -33,7 +33,7 @@ public class UserService {
         this.userRepository = userRepository;
 
     }
-  @CachePut("UserList")
+  @CacheEvict("UserList")
     public UserDto createUser(UserDto data) {
         User newUser = new User(data);
         newUser.setPassword(passwordEncoder.encode(data.password()));
@@ -88,11 +88,12 @@ public class UserService {
     }
 
 
-  @Cacheable("UserList")
+  //@Cacheable("UserList")
     public Page<List<UserDto>> findAllActiveUsers(Pageable pageable) {
       var page = userRepository.findAllByActiveTrue(pageable);
         return page.map(u-> Collections.singletonList(new UserDto(null, u.getName(), null, null, null,null, null, null, null)));
     }
+
     @Cacheable("UserById")
     public User findUserById(Long id) throws EntityNotFoundException {
         return userRepository.findById(id)
