@@ -1,0 +1,22 @@
+version: '3.1'
+
+services:
+  db:
+    image: mysql
+    container_name: mysql_conteiner
+    environment:
+      MYSQL_DATABASE: banking_api_db2
+      MYSQL_ROOT_PASSWORD: mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - banking_api_db2_data:/var/lib/mysql
+  cache:
+    image: redis
+    restart: always
+    ports:
+      - '6379:6379'
+volumes:
+  banking_api_db2_data:
+
+
