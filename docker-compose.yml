@@ -9,11 +9,14 @@ services:
       MYSQL_ROOT_PASSWORD: mysql
     ports:
       - "3306:3306"
+    volumes:
+      - banking_api_db2_data:/var/lib/mysql
   cache:
     image: redis
     restart: always
     ports:
       - '6379:6379'
-
+volumes:
+  banking_api_db2_data:
 
 

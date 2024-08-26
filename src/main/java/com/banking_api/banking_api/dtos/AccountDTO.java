@@ -2,15 +2,17 @@ package com.banking_api.banking_api.dtos;
 
 import com.banking_api.banking_api.domain.account.AccountType;
 import com.banking_api.banking_api.domain.user.User;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.validation.constraints.*;
 import org.hibernate.annotations.Fetch;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-public record AccountDTO(
+public record AccountDTO (
         @NotBlank(message = "O número da conta não pode estar em branco")
         @Size(min = 4, max = 20, message = "O número da conta deve ter entre 4 e 20 caracteres")
         String accountNumber,
@@ -28,4 +30,4 @@ public record AccountDTO(
 
         @NotNull(message = "O id do usuário não pode ser nulo")
         Long user
-) {}
+) implements Serializable{}

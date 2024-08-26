@@ -1,4 +1,4 @@
-SELECT 
+ SELECT
     a.id AS account_id, 
     SUM(CASE WHEN EXTRACT(MONTH FROM d.time_stamp) = 1 THEN d.deposit_value ELSE 0 END) AS total_deposits_january,
     SUM(CASE WHEN EXTRACT(MONTH FROM d.time_stamp) = 2 THEN d.deposit_value ELSE 0 END) AS total_deposits_february,
