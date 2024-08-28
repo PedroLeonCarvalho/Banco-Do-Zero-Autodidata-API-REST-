@@ -5,21 +5,32 @@ Developed a system that registers users and bank accounts, performs transactions
 
 ## Features
 
-- **REST API**
-- **Upload/Download file endpoints**
-- **Validations**
-- **Test Automation with JUnit and Mockito**
-- **MySQL Database**
-- **Swagger UI**
-- **Cache Storage**
-- **JWT Authentication**
-- **End-points:** GET, POST, PUT, DELETE
-- **Reports generation**
-- **Email notifications**
-- **Security with JWT Tokens**
-- **HTTP interaction with external APIs**
-- **Exception handling**
-- **Design Patterns:** Factory, Strategy
+- **REST API**:
+  - Upload/Download file endpoints
+  - Validations
+  - Endpoints: GET, POST, PUT, DELETE
+  - Reports generate
 
-### [https://github.com/PedroLeonCarvalho/RESTful-banking-API-from-scratch--no-curses-or-tutorials-involved-/new/main?filename=README.md](#)
+- **Testing**:
+  - Test automation with JUnit and Mockito
+
+- **Database**:
+  - MySQL database
+
+- **Documentation**:
+  - Swagger UI
+
+- **Caching**:
+  - Cache storage
+
+- **Security**:
+  - JWT authentication
+
+-**Others**
+  -Email notifications
+  -HTTP interaction with external APIs
+  -Exception handling
+  -Design Patterns: Factory, Strategy
+  
+### [www.linkedin.com/in/pedro-leon-carvalho](#)
 
