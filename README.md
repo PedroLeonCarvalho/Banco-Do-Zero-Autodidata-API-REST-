@@ -27,6 +27,7 @@ Developed a system that registers users and bank accounts, performs transactions
   - JWT authentication
 
 - **Others**:
+  
   -Email notifications
   
   -HTTP interaction with external APIs
