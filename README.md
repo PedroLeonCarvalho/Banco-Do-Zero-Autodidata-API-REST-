@@ -28,8 +28,11 @@ Developed a system that registers users and bank accounts, performs transactions
 
 - **Others**:
   -Email notifications
+  
   -HTTP interaction with external APIs
+  
   -Exception handling
+  
   -Design Patterns: Factory, Strategy
   
 ### [www.linkedin.com/in/pedro-leon-carvalho](#)
