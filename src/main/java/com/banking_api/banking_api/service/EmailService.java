@@ -19,8 +19,6 @@ public class EmailService {
     private  SimpleMailMessage template;
 
 
-
-
     private String writeEmailTemplate(BigDecimal value, LocalDateTime depositTimeStamp) {
         return String.format(template.getText(), value, depositTimeStamp);
 

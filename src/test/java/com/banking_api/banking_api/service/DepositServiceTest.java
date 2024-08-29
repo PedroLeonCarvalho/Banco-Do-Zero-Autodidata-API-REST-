@@ -33,7 +33,8 @@ class DepositServiceTest {
     private UserService userService;
     @Mock
     private DepositRepository depositRepository;
-
+    @Mock
+    EmailService emailService;
     @Mock
     private AccountService accountService;
 

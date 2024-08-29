@@ -21,7 +21,6 @@ public class DepositService {
     public DepositService(DepositRepository repository, AccountService accountService, EmailService emailService) {
         this.repository = repository;
         this.accountService = accountService;
-
         this.emailService = emailService;
     }
 

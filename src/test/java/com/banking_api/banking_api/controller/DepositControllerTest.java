@@ -8,14 +8,18 @@ import com.banking_api.banking_api.dtos.DepositDTO;
 import com.banking_api.banking_api.dtos.WithdrawDTO;
 import com.banking_api.banking_api.repository.AccountRepository;
 import com.banking_api.banking_api.repository.UserRepository;
+import com.banking_api.banking_api.service.DepositService;
+import com.banking_api.banking_api.service.EmailService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -32,6 +36,9 @@ import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @SpringBootTest
@@ -45,14 +52,14 @@ class DepositControllerTest {
 
     @Autowired
     private MockMvc mvc;
-
     @Autowired
     private JacksonTester<DepositDTO> jacksonTester;
     @Autowired
     private AccountRepository accountRepository;
     @Autowired
     private UserRepository userRepository;
-
+    @MockBean
+            EmailService emailService;
 
     Account account = new Account();
 
@@ -90,14 +97,16 @@ class DepositControllerTest {
 
     @Test
     @DisplayName("Retorna 200 ok e JSON com informmações")
-    void testDeposit_200ok() throws Exception {
+    void testDeposit_200ok_and_if_email_was_sent() throws Exception {
         // Given
-
         var accountId = account.getId();
         var value = new BigDecimal(2000);
         var accountNewBalance = account.getBalance().add(value);
         var responseDTO = DepositDTO.builder().value(value).newBalance(accountNewBalance).build();
         var jsonExpected = jacksonTester.write(responseDTO).getJson();
+        // Simula o comportamento do serviço de e-mail para não causar exceções
+        doNothing().when(emailService).sendEmail(any(), any());
+
         //Simula o usuário logado com esse username
         RequestPostProcessor postProcessor = SecurityMockMvcRequestPostProcessors.user("username").roles("USER");
 
@@ -113,6 +122,7 @@ class DepositControllerTest {
         // Then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.getContentAsString()).isEqualTo(jsonExpected);
+        verify(emailService).sendEmail(any(), any());
     }
 
     @Test
