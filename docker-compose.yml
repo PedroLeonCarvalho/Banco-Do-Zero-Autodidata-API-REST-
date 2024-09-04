@@ -11,12 +11,20 @@ services:
       - "3306:3306"
     volumes:
       - banking_api_db2_data:/var/lib/mysql
+    networks:
+      - banking-api-network
   cache:
     image: redis
     restart: always
     ports:
       - '6379:6379'
+    networks:
+      - banking-api-network
 volumes:
   banking_api_db2_data:
+
+networks:
+  banking-api-network:
+    driver: bridge
 
 
