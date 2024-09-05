@@ -110,8 +110,8 @@ class EarningsControllerTest {
     }
 
     @Test
-    @DisplayName("não há depósitos a mais de um mês, lança 404")
-    void testGenerateEarnings_404NotFound () throws Exception {
+    @DisplayName("esse testes seria para caso a query incluisse AND DATEDIFF(CURRENT_DATE(), a.lastDepositDate) >= 30")
+    void testGenerateEarnings_200 () throws Exception {
         // Given
 account.setLastDepositDate(LocalDateTime.now());
 
@@ -126,9 +126,9 @@ account.setLastDepositDate(LocalDateTime.now());
         ).andReturn().getResponse();
 
         // Then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
 
-        assertThat(response.getContentAsString()).isEqualTo("Conta não encontrada com o ID ou não há contas ativas e poupança disponíveis");
+        assertThat(response.getContentAsString()).isEqualTo("Rendimentos gerados");
     }
     @Test
     @DisplayName("não há contas POUPANCA , lança 404")

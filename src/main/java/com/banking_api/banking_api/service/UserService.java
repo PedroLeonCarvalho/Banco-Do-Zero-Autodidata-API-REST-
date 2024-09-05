@@ -33,7 +33,7 @@ public class UserService {
         this.userRepository = userRepository;
 
     }
-  @CacheEvict("UserList")
+  @CachePut("UserList")
     public UserDto createUser(UserDto data) {
         User newUser = new User(data);
         newUser.setPassword(passwordEncoder.encode(data.password()));
@@ -42,11 +42,10 @@ public class UserService {
     }
 
 
-    @CachePut("UserList")
+    @CachePut(value = "UserList", key = "#data.id")
     public UserDto updateUser(UserDto data) {
 
         User user = userRepository.getReferenceById(data.id());
-
             user.setName(data.name());
             user.setEmail(data.email());
             user.setCpf(data.cpf());
@@ -54,7 +53,7 @@ public class UserService {
             user.setAge(data.age());
             user.setCity(data.city());
             user.setUsername(data.username());
-            user.setPassword(data.password());
+            user.setPassword(passwordEncoder.encode(data.password()));
 
 
         User updatedUser = userRepository.save(user);
@@ -79,7 +78,7 @@ public class UserService {
     }
 
     @Transactional
-    @CacheEvict("UserList")
+    @CacheEvict(value = "UserList", key = "#id")
     public void deactivateUser(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException());
@@ -88,7 +87,7 @@ public class UserService {
     }
 
 
-  //@Cacheable("UserList")
+  @Cacheable("UserList")
     public Page<List<UserDto>> findAllActiveUsers(Pageable pageable) {
       var page = userRepository.findAllByActiveTrue(pageable);
         return page.map(u-> Collections.singletonList(new UserDto(null, u.getName(), null, null, null,null, null, null, null)));

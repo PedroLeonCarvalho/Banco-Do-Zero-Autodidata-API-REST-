@@ -29,7 +29,6 @@ public class EarningsController {
     @CacheEvict(value= "taxaSelic")
     @Scheduled(cron = "0 0 0 * * ?")
     @Operation(summary = "Generate Earnings/ Gera rendimentos", description = "This endpoint integrates with real external banking API for getting the  current earnings values and is scheduled to be called every 24 hours / Integrado com API de banco real para pegar os valores de juros atuais e é chamada a cada 24 horas")
-
     public ResponseEntity generateEarnings() throws BadResponseException {
         accountService.earningsGenerate();
         return ResponseEntity.ok("Rendimentos gerados");

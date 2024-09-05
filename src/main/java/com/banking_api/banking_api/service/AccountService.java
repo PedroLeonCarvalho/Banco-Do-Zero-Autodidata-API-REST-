@@ -36,7 +36,7 @@ public class AccountService {
         this.userService = userService;
     }
 
-    @CachePut(value="accountsList")
+    @CachePut(value="accountsList", key = "#dto.accountNumber")
     public AccountDTO createAccount(AccountDTO dto) throws EntityNotFoundException {
 
         Account account = new Account();

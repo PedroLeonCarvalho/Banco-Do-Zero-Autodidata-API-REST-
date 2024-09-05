@@ -11,7 +11,16 @@ services:
       - "3306:3306"
     volumes:
       - banking_api_db2_data:/var/lib/mysql
-
+  db_test:
+    image: mysql
+    container_name: mysql_test_container
+    environment:
+      MYSQL_DATABASE: banking_test_db
+      MYSQL_ROOT_PASSWORD: mysql
+    ports:
+      - "3307:3306"
+    volumes:
+      - banking_test_db_data:/var/lib/mysql
 
   cache:
     image: redis
@@ -21,4 +30,5 @@ services:
 
 volumes:
   banking_api_db2_data:
+  banking_test_db_data:
 
