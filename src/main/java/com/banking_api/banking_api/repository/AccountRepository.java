@@ -39,8 +39,7 @@ public interface AccountRepository extends  JpaRepository<Account, Long>  {
     @Query("""
                 SELECT a FROM Account a 
                 WHERE a.active = true AND
-                a.type = 'POUPANCA' AND
-                DATEDIFF(CURRENT_DATE(), a.lastDepositDate) >= 30
+                a.type = 'POUPANCA'
             """)
     Optional<List<Account>> findOptionalAccountsActiveAndPoupanca();
 
