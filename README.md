@@ -1,7 +1,9 @@
-# Banking API From Scratch (2024)
+# Self-Taught Banking API From Scratch (2024)
 
-**Personal Project with No Association to Courses or Tutorials for Study Purposes**  
-Thats covers from basic to advanced skills
+**Self-Taught Project / Projeto Autodidata** 
+ 
+![2024-09-06_11-06](https://github.com/user-attachments/assets/38e5983d-c4c8-495d-8135-d1e023591da1)
+
 ## Features
 
 - **REST API**:
@@ -24,6 +26,7 @@ Thats covers from basic to advanced skills
   - Cache storage
 
 - **Security**:
+
   - JWT authentication
 
 - **Others**:
@@ -38,3 +41,6 @@ Thats covers from basic to advanced skills
   
 ### [www.linkedin.com/in/pedro-leon-carvalho](#)
 
+![2024-09-06_10-50](https://github.com/user-attachments/assets/5cbec450-6a37-47a5-90ab-1d3fed7715a2)
+![2024-09-06_10-50_1](https://github.com/user-attachments/assets/26b94e48-2102-4f21-97ff-d9c74e2658ed)
+![2024-09-06_10-50_2](https://github.com/user-attachments/assets/d410656b-b84a-4980-b7a7-771012a4b9df)
