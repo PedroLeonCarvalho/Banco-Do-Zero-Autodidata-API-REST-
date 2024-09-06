@@ -14,7 +14,12 @@
   - Endpoints: GET, POST, PUT, DELETE
   - Reports generate
   - Login/Authorization
-
+    
+- **Dockerization**:
+  - Dockefile: builds image for app
+  - Docker-compose
+  - Uses Mysql and Redis conteiners
+   
 - **Testing**:
   - Test automation with JUnit and Mockito
 
