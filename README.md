@@ -4,6 +4,8 @@
  
 ![2024-09-06_11-06](https://github.com/user-attachments/assets/38e5983d-c4c8-495d-8135-d1e023591da1)
 
+"Robust REST API, self-taught development, simulates a banking system offering advanced features such as financial transactions, report generation, notification email sending, and savings account interest calculation. Key features include endpoints for file upload/download, JWT authentication, cache storage, automated tests, and MySQL and external Api integration, all documented in Swagger UI.",
+
 ## Features
 
 - **REST API**:
