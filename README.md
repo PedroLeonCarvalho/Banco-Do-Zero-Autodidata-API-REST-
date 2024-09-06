@@ -46,3 +46,29 @@
 ![2024-09-06_10-50](https://github.com/user-attachments/assets/5cbec450-6a37-47a5-90ab-1d3fed7715a2)
 ![2024-09-06_10-50_1](https://github.com/user-attachments/assets/26b94e48-2102-4f21-97ff-d9c74e2658ed)
 ![2024-09-06_10-50_2](https://github.com/user-attachments/assets/d410656b-b84a-4980-b7a7-771012a4b9df)
+
+How to Run:
+
+To run the RESTful Banking API From Scratch project, follow the steps below:
+
+    Clone the Repository: Open your terminal and clone the project repository using Git:
+
+    bash
+
+git clone git@github.com:PedroLeonCarvalho/RESTful-banking-API-from-scratch--no-curses-or-tutorials-involved-.git
+
+Navigate to the Project Directory:
+
+bash
+
+cd RESTful-banking-API-from-scratch--no-curses-or-tutorials-involved-
+
+Build and Run Containers with Docker Compose: Ensure you have Docker and Docker Compose installed. Then, in the project directory, run the following command to build and start the application:
+
+bash
+
+docker-compose up --build
+
+Access the Application:
+
+    Swagger UI documentation can be accessed at http://localhost:8080/swagger-ui.html.
