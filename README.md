@@ -25,6 +25,7 @@
 
 - **Database**:
   - MySQL database
+  - Migrations (Flyway)
 
 - **Documentation**:
   - Swagger UI
