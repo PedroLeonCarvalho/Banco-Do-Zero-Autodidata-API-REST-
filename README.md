@@ -1,8 +1,7 @@
 # Banking API From Scratch (2024)
 
 **Personal Project with No Association to Courses or Tutorials for Study Purposes**  
-Developed a system that registers users and bank accounts, performs transactions between accounts, generates reports, sends notification emails, and accrues interest for savings accounts.
-
+Thats covers from basic to advanced skills
 ## Features
 
 - **REST API**:
@@ -10,6 +9,7 @@ Developed a system that registers users and bank accounts, performs transactions
   - Validations
   - Endpoints: GET, POST, PUT, DELETE
   - Reports generate
+  - Login/Authorization
 
 - **Testing**:
   - Test automation with JUnit and Mockito
