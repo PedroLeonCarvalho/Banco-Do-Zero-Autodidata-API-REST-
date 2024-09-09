@@ -15,8 +15,8 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
                         name = "Pedro Leon",
                         email = "pedrolbbcarvalho@gmail.com"
                 ),
-                title = "Portifolio Spring Rest Banking Api from Scratch / do zero",
-                description = "Banking APIS REST aplication provides basic transactions and integrates with external banking api",
+                title = "Self-Taught Banking Api from Scratch / Api Rest autodidata do zero",
+                description = "Robust REST API, self-taught development, simulates a banking system offering advanced features such as financial transactions, report generation, notification email sending, and savings account interest calculation. Key features include endpoints for file upload/download, JWT authentication, cache storage, automated tests, and MySQL and external Api integration, all documented in Swagger UI.",
                 version = "1.0",
                 license = @License(name = "Licence (Linkedin)",
                         url = "https://www.linkedin.com/in/pedro-leon-carvalho/"),
