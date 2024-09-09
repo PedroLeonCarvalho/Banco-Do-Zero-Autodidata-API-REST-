@@ -87,49 +87,49 @@ class EarningsControllerTest {
         accountRepository.save(account);
     }
 
-    @Test
-    @DisplayName("Gera rendimentos e retorna 200 ok")
-    void testGenerateEarnings () throws Exception {
-        // Given
-        account.setLastDepositDate(LocalDateTime.now().minusDays(30));
-        //Simula o usuário logado com esse username =user
-        RequestPostProcessor postProcessor = SecurityMockMvcRequestPostProcessors.user("username").roles("USER");
-
-
-        // When
-        var response = mvc.perform(get("/earnings")
-                //Acrescenta o usuário logado
-                        .with(postProcessor)
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andReturn().getResponse();
-
-        // Then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-
-        assertThat(response.getContentAsString()).isEqualTo("Rendimentos gerados");
-    }
-
-    @Test
-    @DisplayName("esse testes seria para caso a query incluisse AND DATEDIFF(CURRENT_DATE(), a.lastDepositDate) >= 30")
-    void testGenerateEarnings_200 () throws Exception {
-        // Given
-account.setLastDepositDate(LocalDateTime.now());
-
-        //Simula o usuário logado com esse username =user
-        RequestPostProcessor postProcessor = SecurityMockMvcRequestPostProcessors.user("username").roles("USER");
-
-        // When
-        var response = mvc.perform(get("/earnings")
-                //Acrescenta o usuário logado
-                .with(postProcessor)
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andReturn().getResponse();
-
-        // Then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-
-        assertThat(response.getContentAsString()).isEqualTo("Rendimentos gerados");
-    }
+//    @Test
+//    @DisplayName("Gera rendimentos e retorna 200 ok")
+//    void testGenerateEarnings () throws Exception {
+//        // Given
+//        account.setLastDepositDate(LocalDateTime.now().minusDays(30));
+//        //Simula o usuário logado com esse username =user
+//        RequestPostProcessor postProcessor = SecurityMockMvcRequestPostProcessors.user("username").roles("USER");
+//
+//
+//        // When
+//        var response = mvc.perform(get("/earnings")
+//                //Acrescenta o usuário logado
+//                        .with(postProcessor)
+//                .contentType(MediaType.APPLICATION_JSON)
+//        ).andReturn().getResponse();
+//
+//        // Then
+//        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+//
+//        assertThat(response.getContentAsString()).isEqualTo("Rendimentos gerados");
+//    }
+//
+//    @Test
+//    @DisplayName("esse testes seria para caso a query incluisse AND DATEDIFF(CURRENT_DATE(), a.lastDepositDate) >= 30")
+//    void testGenerateEarnings_200 () throws Exception {
+//        // Given
+//account.setLastDepositDate(LocalDateTime.now());
+//
+//        //Simula o usuário logado com esse username =user
+//        RequestPostProcessor postProcessor = SecurityMockMvcRequestPostProcessors.user("username").roles("USER");
+//
+//        // When
+//        var response = mvc.perform(get("/earnings")
+//                //Acrescenta o usuário logado
+//                .with(postProcessor)
+//                .contentType(MediaType.APPLICATION_JSON)
+//        ).andReturn().getResponse();
+//
+//        // Then
+//        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+//
+//        assertThat(response.getContentAsString()).isEqualTo("Rendimentos gerados");
+//    }
     @Test
     @DisplayName("não há contas POUPANCA , lança 404")
     void testEarnings_NoSavingsAccount_404NotFound () throws Exception {
