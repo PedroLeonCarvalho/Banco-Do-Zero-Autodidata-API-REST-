@@ -56,11 +56,11 @@ Para rodar o projeto API Bancária Do Zero, siga os passos abaixo:
 1. **Clone o Repositório**:
    Abra seu terminal e clone o repositório do projeto usando o Git:
  
-```git clone git@github.com:PedroLeonCarvalho/RESTful-banking-API-from-scratch--no-curses-or-tutorials-involved-.git```
+```git clone git@github.com:PedroLeonCarvalho/Banco-Do-Zero-Autodidata-API-REST-.git```
 
 Navegue até o Diretório do Projeto:
 
-```cd RESTful-banking-API-from-scratch--no-curses-or-tutorials-involved-```
+```cd git@github.com:PedroLeonCarvalho/Banco-Do-Zero-Autodidata-API-REST-.git```
 
 Certifique-se de que o Docker e o Docker Compose estejam instalados. Em seguida, no diretório do projeto, execute o seguinte comando para construir e iniciar a aplicação:
 
