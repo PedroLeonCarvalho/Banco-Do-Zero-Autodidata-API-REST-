@@ -16,6 +16,7 @@
   - Login/Autorização
 
 - **Dockerização**:
+  - Api 100% Dockerizada 
   - Dockerfile: cria imagem para a aplicação
   - Docker Compose
   - Utiliza contêineres MySQL e Redis
@@ -55,8 +56,28 @@ Para rodar o projeto API Bancária Do Zero, siga os passos abaixo:
 1. **Clone o Repositório**:
    Abra seu terminal e clone o repositório do projeto usando o Git:
 
-   ```bash
-   git clone git@github.com:PedroLeonCarvalho/RESTful-banking-API-from-scratch--no-curses-or-tutorials-involved-.git
+   bash
+  ```git clone git@github.com:PedroLeonCarvalho/RESTful-banking-API-from-scratch--no-curses-or-tutorials-involved-.git ```
+
+
+Navegue até o Diretório do Projeto:
+
+
+```cd RESTful-banking-API-from-scratch--no-curses-or-tutorials-involved-```
+
+
+Certifique-se de que o Docker e o Docker Compose estejam instalados. Em seguida, no diretório do projeto, execute o seguinte comando para construir e iniciar a aplicação:
+
+
+```docker-compose up --build```
+
+Acesse a Aplicação: A API estará acessível em http://localhost:8080. A documentação do Swagger UI pode ser acessada em:
+
+```http://localhost:8080/swagger-ui.html```
+
+Desligue os Contêineres: Quando terminar, pare e remova os contêineres com:
+
+```docker-compose down```
 
 
 
