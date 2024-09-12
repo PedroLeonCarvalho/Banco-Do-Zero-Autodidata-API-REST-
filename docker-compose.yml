@@ -1,14 +1,7 @@
 version: '3.1'
 
 services:
-  app:
-    image: banking_api
-    ports:
-      - "8080:8080"
-    depends_on:
-      - db
-      - db_test
-      - cache
+
   db:
     image: mysql
     container_name: mysql_container
@@ -35,6 +28,19 @@ services:
     restart: always
     ports:
       - '6379:6379'
+  app:
+    build: .
+    image: banking_api
+    container_name: banking_api_container
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/banking_api_db2
+      - SPRING_REDIS_HOST=cache
+    depends_on:
+      - db
+      - cache
 
 volumes:
   banking_api_db2_data:
