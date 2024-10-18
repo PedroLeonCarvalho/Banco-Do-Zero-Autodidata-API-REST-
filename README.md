@@ -1,6 +1,6 @@
 # API Bancária Do Zero (2024)
 
-**Projeto Autodidata**
+**Projeto Autodidata Desenvolvido por Pedro Leon ®**
 
 ![Imagem do Projeto](https://github.com/user-attachments/assets/38e5983d-c4c8-495d-8135-d1e023591da1)
 
